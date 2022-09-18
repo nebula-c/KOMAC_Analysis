@@ -1,1 +1,6 @@
-__all__ = ['AllExtract','Multisub','npys','test']
+__all__ = ['AllExtract',
+            'Multisub',
+            'npys',
+            'test',
+            'mythrscanana'
+            ]
