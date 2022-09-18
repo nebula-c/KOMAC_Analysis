@@ -1,0 +1,6 @@
+*.raw
+*.json
+*.png
+*.npy
+*.pyc
+.DS_Store
