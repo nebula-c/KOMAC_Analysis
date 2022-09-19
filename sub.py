@@ -22,6 +22,7 @@ parser.add_argument('-r','--raw',help='Set raw target list')
 parser.add_argument('-e','--extractnpy',action='store_true',help='Extract npy')
 parser.add_argument('-f','--firenumana',action='store_true',help='Run analysis for Firenum')
 parser.add_argument('-a','--allextractnpy',action='store_true',help='Extract npy')
+parser.add_argument('-m','--merge',action='store_true',help='Merge numpy files')
 args=parser.parse_args()
 
 
@@ -79,6 +80,11 @@ if args.firenumana:
     myfna.SaveImage("test.png")
     # myfna.SortPlot(a,b)
     
+if args.merge:
+    mymn = MergeNpy.MergeNpy()
+    mymn.SetPath('eachdata/Apr/')
+    mymn.SetType('rowhits_origin')
+    mymn.run()
 
 
 end = time.time()
