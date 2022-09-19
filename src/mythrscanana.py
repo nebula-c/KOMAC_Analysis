@@ -3,7 +3,6 @@
 import argparse
 import json
 import numpy as np
-import decoder
 from tqdm import tqdm
 from scipy import optimize
 from scipy import special
@@ -17,7 +16,7 @@ def sigmoid(x,threshold,noise,ntrg):
 
 def mythrscanana(args):
     outfilename=args.rawdata.split("/")[-1].split(".")[0]
-
+    
     try:
         with open('%s'%(args.params),'r') as f:
             params=json.loads(f.read())
@@ -42,6 +41,12 @@ def mythrscanana(args):
     dead=[]
     bad=[]
 
+    rev_thresholds=np.zeros((512,1024))
+    rev_noise=np.zeros((512,1024))
+
+    totalrowhits = []
+    rev_totalrowhits = []
+
     i=0
     for row in params['row']:
         rowhits=np.zeros((dvmax-dvmin+1,1024))
@@ -58,18 +63,30 @@ def mythrscanana(args):
 
         ### ------------------------------------------
         ### revision
-        rev_rowhits = copy.deepcopy(rowhits)
-        for mynum in range(1024):
-            if (rev_rowhits[0,mynum] != 0) & (rev_rowhits[0,mynum] != 50):
-                rev_rowhits[0,mynum]=0
+        if args.revision: 
+            rev_rowhits = copy.deepcopy(rowhits)
+            for mynum in range(1024):
+                if (rev_rowhits[0,mynum] != 0) & (rev_rowhits[0,mynum] != 50):
+                    rev_rowhits[0,mynum]=0
         ### ------------------------------------------
+
+
+        totalrowhits.append(np.swapaxes(rowhits,0,1))
+        if args.revision:
+            rev_totalrowhits.append(np.swapaxes(rev_rowhits,0,1))
+
+
+
+
+
 
         if not args.fit:
             d=np.diff(rowhits,axis=0)
-            rev_d=np.diff(rev_rowhits,axis=0) # revision
-            
             nhits = np.sum(d,axis=0)
-            rev_nhits = np.sum(rev_d,axis=0)  # revision
+            
+            if args.revision: 
+                rev_d=np.diff(rev_rowhits,axis=0) # revision
+                rev_nhits = np.sum(rev_d,axis=0)  # revision
 
             if np.any(nhits<ntrg):
                 bad.extend([(col,row) for col in np.where(nhits<ntrg)[0]])
@@ -78,22 +95,23 @@ def mythrscanana(args):
             
 
             nhits[nhits<ntrg] = np.nan # exclude from calculation
-            rev_nhits[rev_nhits<ntrg] = np.nan # exclude from calculation, revision
+            if args.revision: 
+                rev_nhits[rev_nhits<ntrg] = np.nan # exclude from calculation, revision
 
             d/=nhits
-            rev_d/=rev_nhits
-
             dv=np.linspace(0.5,rowhits.shape[0]-1.5,rowhits.shape[0]-1)[:,np.newaxis]    
             t=np.sum(d*dv,axis=0)
             n=np.sqrt(np.sum((dv-t)**2*d,axis=0))
             thresholds[row,:]=t
             noise[row,:]=n
 
-            rev_dv=np.linspace(0.5,rev_rowhits.shape[0]-1.5,rev_rowhits.shape[0]-1)[:,np.newaxis]    
-            rev_t=np.sum(rev_d*rev_dv,axis=0)
-            rev_n=np.sqrt(np.sum((rev_dv-rev_t)**2*rev_d,axis=0))
-            rev_thresholds[row,:]=rev_t
-            rev_noise[row,:]=rev_n
+            if args.revision:
+                rev_d/=rev_nhits
+                rev_dv=np.linspace(0.5,rev_rowhits.shape[0]-1.5,rev_rowhits.shape[0]-1)[:,np.newaxis]    
+                rev_t=np.sum(rev_d*rev_dv,axis=0)
+                rev_n=np.sqrt(np.sum((rev_dv-rev_t)**2*rev_d,axis=0))
+                rev_thresholds[row,:]=rev_t
+                rev_noise[row,:]=rev_n
             ### ------------------------------------------
 
         else:
@@ -118,7 +136,20 @@ def mythrscanana(args):
                         plt.clf()
                     bad.append((index,row))
     pbar.close()
-    np.save('%s/%s'%(args.path,args.output),thresholds)
+    np.save('%s/threshold_origin_%s'%(args.path,outfilename.split("-")[1]),thresholds)
+    np.save('%s/noise_origin_%s'%(args.path,outfilename.split("-")[1]),noise)
+    
+    if args.revision:
+        np.save('%s/threshold_revision_%s'%(args.path,outfilename.split("-")[1]),rev_thresholds)
+        np.save('%s/noise_revision_%s'%(args.path,outfilename.split("-")[1]),rev_noise)
+
+
+    if args.scurve:
+        np.save('%s/rowhits_origin_%s'%(args.path,outfilename.split("-")[1]),totalrowhits)
+        if args.revision:
+            np.save('%s/rowhits_revision_%s'%(args.path,outfilename.split("-")[1]),rev_totalrowhits)
+
+
 
     if args.quiet:
         return
@@ -164,6 +195,7 @@ def mythrscanana(args):
     print(f"  of which {len(dead)} dead (with 0 hits).")
 
 if __name__=="__main__":
+    import decoder
     parser=argparse.ArgumentParser(description='The mighty threshold scanner')
     parser.add_argument('rawdata', metavar='RAWFILE',help='raw data file to be processed')
     parser.add_argument('params', metavar='JSONFILE',help='json file with scan setteing')
@@ -173,8 +205,9 @@ if __name__=="__main__":
     parser.add_argument('--output','-o',default='thresholds.npy',help='numpy output (default: thresholds.npy)')
     parser.add_argument('--quiet','-q',action='store_true',help="No plots, no terminal output, just npy file.")
     parser.add_argument('--scurve','-s',action='store_true',help="Save Scurve npy file")
+    parser.add_argument('--revision','-r',action='store_true',help="revision version")
     args=parser.parse_args()
 
-    print(args)
+    # print(args)
 
-    thrscanana(args)
+    mythrscanana(args)

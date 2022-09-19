@@ -100,6 +100,7 @@ class Multisub:
         
         ### Code for mythrescanana
         if self.__mode == 5:
+            os.system('mkdir %s'mydir)
             mycode = '''python3 {} {} {} --path {} -s -r -q'''.format(self.__macro,self.__target[0][i],self.__target[1][i],self.__path,self.__resname,i) 
         
         ### For test

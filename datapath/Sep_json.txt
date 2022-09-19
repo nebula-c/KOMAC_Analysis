@@ -1,0 +1,4 @@
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_09/data_20220915_174934/thrscan/thrscan-20220915_175027.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_09/data_20220915_182145/thrscan/thrscan-20220915_182244.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_09/data_20220915_224211/thrscan/thrscan-20220915_224310.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_09/data_20220916_004206/thrscan/thrscan-20220916_004305.json

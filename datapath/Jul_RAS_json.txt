@@ -1,0 +1,17 @@
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_183147/thrscan/thrscan-20220705_183240.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_190439/thrscan/thrscan-20220705_190532.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_192559/thrscan/thrscan-20220705_192651.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_205956/thrscan/thrscan-20220705_210049.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_212108/thrscan/thrscan-20220705_212201.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_215700/thrscan/thrscan-20220705_215754.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_221521/thrscan/thrscan-20220705_221615.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_223611/thrscan/thrscan-20220705_223703.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_225317/thrscan/thrscan-20220705_225409.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_231034/thrscan/thrscan-20220705_231127.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_232859/thrscan/thrscan-20220705_232951.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220705_234647/thrscan/thrscan-20220705_234740.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220706_000331/thrscan/thrscan-20220706_000424.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220706_002049/thrscan/thrscan-20220706_002142.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220706_003845/thrscan/thrscan-20220706_003938.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220706_012000/thrscan/thrscan-20220706_012053.json
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_07/RAS/data_20220706_013726/thrscan/thrscan-20220706_013819.json

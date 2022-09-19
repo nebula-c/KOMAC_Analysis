@@ -30,10 +30,12 @@ if args.test:
     
 
 if args.ms:
+    mydir = './Sep'
+    os.system('mkdir %s'%mydir)
     myms = Multisub.Multisub()
-    myms.SetMode(4)
+    myms.SetMode(5)
     myms.SetTarget2(args.json,args.raw)
-    myms.SetName("Jul_RPI")
+    myms.SetPath(mydir)
     myms.Run()
 
 

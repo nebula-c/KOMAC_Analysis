@@ -4,3 +4,4 @@
 *.npy
 *.pyc
 .DS_Store
+src/test.py
