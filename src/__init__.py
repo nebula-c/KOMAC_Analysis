@@ -3,5 +3,6 @@ __all__ = ['AllExtract',
             'npys',
             'test',
             'mythrscanana',
-            'MergeNpy'
+            'MergeNpy',
+            'ANTA'
             ]

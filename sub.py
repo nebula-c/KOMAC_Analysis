@@ -21,8 +21,10 @@ parser.add_argument('-j','--json',help='Set json target list')
 parser.add_argument('-r','--raw',help='Set raw target list')
 parser.add_argument('-e','--extractnpy',action='store_true',help='Extract npy')
 parser.add_argument('-f','--firenumana',action='store_true',help='Run analysis for Firenum')
-parser.add_argument('-a','--allextractnpy',action='store_true',help='Extract npy')
+# parser.add_argument('-a','--allextractnpy',action='store_true',help='Extract npy')
 parser.add_argument('-m','--merge',action='store_true',help='Merge numpy files')
+parser.add_argument('-p','--path',help='path')
+parser.add_argument('-a','--anta',action='store_true',help='Analyzing Numpy-files for Threshold of ALPIDE(ANTA)')
 args=parser.parse_args()
 
 
@@ -40,27 +42,27 @@ if args.ms:
     myms.Run()
 
 
-if args.extractnpy:
-    myen = ExtractNpy.ExtractNpy()
-    # myen.Run(args.json,args.raw)
+# if args.extractnpy:
+#     myen = ExtractNpy.ExtractNpy()
+#     # myen.Run(args.json,args.raw)
     
-    myen.SetName("FireNum_ori_Jul_RAS.npy")
-    myen.Combine_E(args.target,".npy")
+#     myen.SetName("FireNum_ori_Jul_RAS.npy")
+#     myen.Combine_E(args.target,".npy")
 
-    myen.SetName("Thrs_ori_Jul_RAS.npy")
-    myen.Combine_E(args.target,"ori_thrs.npy")
+#     myen.SetName("Thrs_ori_Jul_RAS.npy")
+#     myen.Combine_E(args.target,"ori_thrs.npy")
     
-    myen.SetName("Noise_ori_Jul_RAS.npy")
-    myen.Combine_E(args.target,"ori_noise.npy")
+#     myen.SetName("Noise_ori_Jul_RAS.npy")
+#     myen.Combine_E(args.target,"ori_noise.npy")
 
-    myen.SetName("FireNum_rev_Jul_RAS.npy")
-    myen.Combine_E(args.target,"rev_firenum.npy")
+#     myen.SetName("FireNum_rev_Jul_RAS.npy")
+#     myen.Combine_E(args.target,"rev_firenum.npy")
 
-    myen.SetName("Thrs_rev_Jul_RAS.npy")
-    myen.Combine_E(args.target,"rev_thrs.npy")
+#     myen.SetName("Thrs_rev_Jul_RAS.npy")
+#     myen.Combine_E(args.target,"rev_thrs.npy")
 
-    myen.SetName("Noise_rev_Jul_RAS.npy")
-    myen.Combine_E(args.target,"rev_noise.npy")
+#     myen.SetName("Noise_rev_Jul_RAS.npy")
+#     myen.Combine_E(args.target,"rev_noise.npy")
 
 
 
@@ -81,11 +83,24 @@ if args.firenumana:
     # myfna.SortPlot(a,b)
     
 if args.merge:
+    # mymn = MergeNpy.MergeNpy()
+    # mymn.SetPath('eachdata/Apr/')
+    # mymn.SetType('rowhits_origin')
+    # mymn.SetOutput('Apr_rowhits_origin_total.npy')
+    # mymn.run()
+
     mymn = MergeNpy.MergeNpy()
-    mymn.SetPath('eachdata/Apr/')
-    mymn.SetType('rowhits_origin')
+    mymn.SetPath(args.path)
+    mymn.SetType(args.target1)
+    mymn.SetOutput(args.target2)
     mymn.run()
 
+if args.anta:
+    mythrs = ANTA.Thrs()
+    mypath = './totalnpy/Apr_threshold_origin_total.npy'
+    mythrs.load(mypath)
+    mythrs.printshape()
+    mythrs.testshow()
 
 end = time.time()
 print("=========================")
