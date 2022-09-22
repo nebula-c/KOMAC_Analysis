@@ -1,5 +1,41 @@
 #!/bin/bash
 
+#-------------------------------------------------------------------------------------------------
+### Calculate mean of threshold
+./sub.py -a -p ./processed/totalnpy/Apr_threshold_origin_total.npy         > ./mean/mean_Apr_orign.txt
+./sub.py -a -p ./processed/totalnpy/Apr_threshold_revision_total.npy       > ./mean/mean_Apr_revision.txt
+./sub.py -a -p ./processed/totalnpy/Jun_threshold_origin_total.npy         > ./mean/mean_Jun_origin.txt
+./sub.py -a -p ./processed/totalnpy/Jun_threshold_revision_total.npy       > ./mean/mean_Jun_revision.txt
+./sub.py -a -p ./processed/totalnpy/Jul_RPI_threshold_origin_total.npy     > ./mean/mean_Jul_RPI_origin.txt
+./sub.py -a -p ./processed/totalnpy/Jul_RPI_threshold_revision_total.npy   > ./mean/mean_Jul_RPI_revision.txt
+./sub.py -a -p ./processed/totalnpy/Jul_RAS_threshold_origin_total.npy     > ./mean/mean_Jul_RAS_origin.txt
+./sub.py -a -p ./processed/totalnpy/Jul_RAS_threshold_revision_total.npy   > ./mean/mean_Jul_RAS_revision.txt
+./sub.py -a -p ./processed/totalnpy/Sep_threshold_origin_total.npy         > ./mean/mean_Sep_origin.txt
+./sub.py -a -p ./processed/totalnpy/Sep_threshold_revision_total.npy       > ./mean/mean_Sep_revision.txt
+
+
+
+
+
+
+
+
+# #-------------------------------------------------------------------------------------------------
+# ### Draw Maps
+# ./sub.py -a -p ./totalnpy/Apr_threshold_origin_total.npy        -o Apr_origin_hist.png          -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Apr_threshold_revision_total.npy      -o Apr_revision_hist.png        -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jun_threshold_origin_total.npy        -o Jun_origin_hist.png          -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jun_threshold_revision_total.npy      -o Jun_revision_hist.png        -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jul_RPI_threshold_origin_total.npy    -o Jul_RPI_origin_hist.png      -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jul_RPI_threshold_revision_total.npy  -o Jul_RPI_revision_hist.png    -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jul_RAS_threshold_origin_total.npy    -o Jul_RAS_origin_hist.png      -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Jul_RAS_threshold_revision_total.npy  -o Jul_RAS_revision_hist.png    -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Sep_threshold_origin_total.npy        -o Sep_origin_hist.png          -v1 0.5 -v2 0.4
+# ./sub.py -a -p ./totalnpy/Sep_threshold_revision_total.npy      -o Sep_revision_hist.png        -v1 0.5 -v2 0.4
+
+
+
+
 
 
 # #-------------------------------------------------------------------------------------------------

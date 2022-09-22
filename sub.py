@@ -25,6 +25,10 @@ parser.add_argument('-f','--firenumana',action='store_true',help='Run analysis f
 parser.add_argument('-m','--merge',action='store_true',help='Merge numpy files')
 parser.add_argument('-p','--path',help='path')
 parser.add_argument('-a','--anta',action='store_true',help='Analyzing Numpy-files for Threshold of ALPIDE(ANTA)')
+parser.add_argument('-o','--output',help='output name')
+parser.add_argument('-v1','--value1',type=float,help='value1 for parameter')
+parser.add_argument('-v2','--value2',type=float,help='value2 for parameter')
+parser.add_argument('-c','--cpprun',action='store_true',help='Running some cpp file with root')
 args=parser.parse_args()
 
 
@@ -66,21 +70,21 @@ if args.ms:
 
 
 
-if args.firenumana:
-    myfna = FireNum.FireNumAna()
-    Apr_ori = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_ori_Apr.npy")
-    Apr_rev = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_rev_Apr.npy")
-    Jun_ori = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_ori_Jun.npy")
-    Jun_rev = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_rev_Jun.npy")
-    RAS_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_ori_Jul_RAS.npy")
-    RAS_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_rev_Jul_RAS.npy")
-    RPI_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_ori_Jul_RPI.npy")
-    RPI_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_rev_Jul_RPI.npy")
+# if args.firenumana:
+#     myfna = FireNum.FireNumAna()
+#     Apr_ori = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_ori_Apr.npy")
+#     Apr_rev = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_rev_Apr.npy")
+#     Jun_ori = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_ori_Jun.npy")
+#     Jun_rev = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_rev_Jun.npy")
+#     RAS_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_ori_Jul_RAS.npy")
+#     RAS_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_rev_Jul_RAS.npy")
+#     RPI_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_ori_Jul_RPI.npy")
+#     RPI_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_rev_Jul_RPI.npy")
 
-    a = RPI_ori
-    a.DrawAllMaps()
-    myfna.SaveImage("test.png")
-    # myfna.SortPlot(a,b)
+#     a = RPI_ori
+#     a.DrawAllMaps()
+#     myfna.SaveImage("test.png")
+#     # myfna.SortPlot(a,b)
     
 if args.merge:
     # mymn = MergeNpy.MergeNpy()
@@ -96,13 +100,27 @@ if args.merge:
     mymn.run()
 
 if args.anta:
-    mythrs = ANTA.Thrs()
-    mypath = './totalnpy/Apr_threshold_origin_total.npy'
-    mythrs.load(mypath)
-    mythrs.printshape()
-    mythrs.testshow()
+    # mythrs = ANTA.Thrs()
+    # mypath = './totalnpy/Apr_threshold_origin_total.npy'
+    # mythrs.load(mypath)
+    # mythrs.printshape()
+    # mythrs.testshow()
 
-end = time.time()
-print("=========================")
-print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
-print("=========================")
+    mythrs = ANTA.Thrs()
+    mythrs.load(args.path)
+    # mythrs.allmaps(args.output,args.value)
+    # mythrs.allhist(args.output,args.value1,args.value2)
+    mythrs.meanthrs()
+
+if args.cpprun:
+    # cppfile = './src/test.cpp'
+    cppfile = './src/dose_thrs.cpp'
+    dosetxt = '/home/suchoi/KOMAC/analysis/processed/dose/Apr_dose.txt'
+    thrstxt = 'hello'
+    mycommand = """root '{}("{}","{}")' -l""".format(cppfile,dosetxt,thrstxt)
+    os.system(mycommand)
+
+# end = time.time()
+# print("=========================================")
+# print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
+# print("=========================================")

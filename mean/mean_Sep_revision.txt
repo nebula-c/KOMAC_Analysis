@@ -1,0 +1,4 @@
+Threshold: 13.15 +/- 1.44 DAC (based on 523171 pixels)
+Threshold: 13.86 +/- 1.48 DAC (based on 521968 pixels)
+Threshold: 14.04 +/- 1.59 DAC (based on 515200 pixels)
+Threshold: 13.41 +/- 1.65 DAC (based on 517333 pixels)
