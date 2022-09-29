@@ -107,20 +107,19 @@ if args.anta:
     # mythrs.testshow()
 
     mythrs = ANTA.Thrs()
-    mythrs.load(args.path)
+    # mythrs.load(args.path)
     # mythrs.allmaps(args.output,args.value)
     # mythrs.allhist(args.output,args.value1,args.value2)
-    mythrs.meanthrs()
+    mythrs.savemeanastxt(args.target)
 
 if args.cpprun:
-    # cppfile = './src/test.cpp'
-    cppfile = './src/dose_thrs.cpp'
-    dosetxt = '/home/suchoi/KOMAC/analysis/processed/dose/Apr_dose.txt'
-    thrstxt = 'hello'
-    mycommand = """root '{}("{}","{}")' -l""".format(cppfile,dosetxt,thrstxt)
+    cppfile = './dose_thrs.cpp'
+    dosetxt = args.target1
+    thrstxt = args.target2
+    mycommand = """root '{}("{}","{}","{}")' -l -q""".format(cppfile,dosetxt,thrstxt,args.output)
     os.system(mycommand)
 
-# end = time.time()
-# print("=========================================")
-# print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
-# print("=========================================")
+end = time.time()
+print("=========================================")
+print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
+print("=========================================")

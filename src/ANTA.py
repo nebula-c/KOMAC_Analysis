@@ -55,4 +55,23 @@ class Thrs:
             thresholds[thresholds==0]=np.nan
             print('Threshold: %.2f +/- %.2f DAC (based on %d pixels)'%(np.nanmean(thresholds),np.nanstd(thresholds),int(np.sum(~np.isnan(thresholds)))))
 
+    def savemeanastxt(self,filepath):
+        txtfile = open(filepath, 'r')
+        filename = filepath.split('/')[len(filepath.split('/'))-1]
         
+        os.system("mkdir datainfo")
+        newfile = open("./datainfo/{}".format(filename), 'w')
+        newfile.write('mean,noise\n')
+
+
+        while True:
+            line = txtfile.readline()
+            if not line: break
+            
+            word = line.split(' ')
+            newfile.write('{},{}\n'.format(word[1],word[3]))
+
+
+        txtfile.close()
+        newfile.close()
+

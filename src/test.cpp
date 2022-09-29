@@ -2,8 +2,13 @@
 
 using namespace std;
 
-void test(int a)
+void func(int a, int b, int c=3, int d=4)
 {
-    cout << "hello world" << endl;
-    cout << a << endl;
+    cout << a << ", " << b << ", " << c << ", " << d << endl;
 }
+
+void test()
+{
+    func(1,2);
+}
+
