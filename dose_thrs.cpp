@@ -45,6 +45,14 @@ TGraph  *gApr_flux_order,
         *gJun_flux_order, 
         *gJul_flux_order, 
         *gSep_flux_order;
+
+TGraph  *gprague_1,     //5
+        *gprague_2,     //16
+        *gprague_3,     //17
+        *gprague_4,     //19
+        *gprague_5,     //38
+        *gprague_6,     //41
+        *gprague_7;     //42
         
 
 void dose_thrs()
@@ -72,6 +80,16 @@ void dose_thrs()
     SetGraph(gJul_flux_order,kBlue);
     SetGraph(gSep_flux_order,kViolet);
 
+
+    SetGraph(gprague_1,kRed);
+    SetGraph(gprague_2,kOrange);
+    SetGraph(gprague_3,kYellow);
+    SetGraph(gprague_4,kGreen);
+    SetGraph(gprague_5,kBlue);
+    SetGraph(gprague_6,kCyan);
+    SetGraph(gprague_7,kViolet);
+
+
     // mg->Add(gApr_origin_dose_thrs,"2022-04, origin");
     // mg->Add(gApr_revision_dose_thrs,"2022-04, revision");
     // mg->Add(gJun_origin_dose_thrs,"2022-06, origin");
@@ -89,18 +107,24 @@ void dose_thrs()
     // mg->Add(gJul_RAS_revision_dose_thrs,"2022-07");
     // mg->Add(gSep_revision_dose_thrs,"2022-09");
 
-    mg->Add(gRAS_dose_time,"RAS");
-    mg->Add(gRPI_dose_time,"RPI");
+    // mg->Add(gRAS_dose_time,"RAS"§);
+    // mg->Add(gRPI_dose_time,"RPI");
 
     // mg->Add(gApr_flux_order,"2022-04");
     // mg->Add(gJun_flux_order,"2022-06");
     // mg->Add(gJul_flux_order,"2022-07");
     // mg->Add(gSep_flux_order,"2022-09");
     
-
+    mg->Add(gprague_1);
+    mg->Add(gprague_2);
+    mg->Add(gprague_3);
+    mg->Add(gprague_4);
+    mg->Add(gprague_5);
+    mg->Add(gprague_6);
+    mg->Add(gprague_7);
 
     // mg->offLegend();
-    mg->SetMG("time(min)","mean threshold",0,500,1,200);
+    mg->SetMG("dose(krad)","mean threshold",0,500,1,200);
     
     mg->Draw();
     
@@ -112,6 +136,7 @@ void dose_thrs()
 void LoadGraph()
 {
     string mypath = "/home/suchoi/KOMAC/analysis/processed/";
+    string mypath2 = "/home/suchoi/KOMAC/analysis/prague/";
 
     gApr_origin_dose_thrs         = onegraph(mypath + "datainfo/mean_Apr_origin.txt"      ,mypath + "dose/Apr_dose.txt",                0);
     gApr_revision_dose_thrs       = onegraph(mypath + "datainfo/mean_Apr_revision.txt"    ,mypath + "dose/Apr_dose.txt",                0);
@@ -131,9 +156,15 @@ void LoadGraph()
     gJun_flux_order      = onegraph(mypath + "flux/Jun_flux.txt");
     gJul_flux_order      = onegraph(mypath + "flux/Jul_flux.txt");
     gSep_flux_order      = onegraph(mypath + "flux/Sep_flux.txt");
+    
+    gprague_1           = onegraph(mypath2+"r5.txt");
+    gprague_2           = onegraph(mypath2+"r16.txt");
+    gprague_3           = onegraph(mypath2+"r17.txt");
+    gprague_4           = onegraph(mypath2+"r19.txt");
+    gprague_5           = onegraph(mypath2+"r38.txt");
+    gprague_6           = onegraph(mypath2+"r41.txt");
+    gprague_7           = onegraph(mypath2+"r42.txt");
 }
-
-
 
 void eachresult(string fileYname, string fileXname, char* output)
 {
@@ -158,9 +189,10 @@ TGraph* onegraph(string fileYname, string fileXname = "default", bool isaccum=fa
     
         if(!fileY) cout << "there is no file : " << fileYname << endl;
         
-        string valY, line;
+        string valX,valY, line;
         int order=1;
         fileY >> line;  // for column title
+        
         // cout << line << endl;
         while(1)
         {
@@ -170,16 +202,26 @@ TGraph* onegraph(string fileYname, string fileXname = "default", bool isaccum=fa
             if(line.find(',') != string::npos)  // if it has ','
             {
                 valY = line.substr(0,line.find(','));
+                valX = line.substr(0,line.find(','));
+                double_t x,y;
+                cout << valY << endl;
+                y = stof(valY);
+                x = stof(valX);
+                g1->SetPoint(g1->GetN(),x,y);    
+            
             }
             else
+                cout << "hello" << endl;
                 valY = line;
+                double_t x,y;
+                cout << valY << endl;
+                y = stof(valY);
+                x = order;
+                g1->SetPoint(g1->GetN(),x,y);    
+
+                order++;
             
-            double_t x,y;
-            y = stof(valY);
-            x = order;
-            g1->SetPoint(g1->GetN(),x,y);    
             
-            order++;
         }
 
         fileY.close();

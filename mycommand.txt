@@ -1,0 +1,5 @@
+./sub.py -m -t1 processed/totalnpy/Apr_threshold_origin_total.npy       -t2 Apr_null_origin_total.npy
+./sub.py -m -t1 processed/totalnpy/Jun_threshold_origin_total.npy       -t2 Jun_null_origin_total.npy
+./sub.py -m -t1 processed/totalnpy/Jul_RPI_threshold_origin_total.npy   -t2 Jul_RPI_null_origin_total.npy
+./sub.py -m -t1 processed/totalnpy/Sep_threshold_origin_total.npy       -t2 Sep_null_origin_total.npy
+./sub.py -m -t1 processed/totalnpy/Jul_RAS_threshold_origin_total.npy   -t2 Jul_RAS_null_origin_total.npy

@@ -26,14 +26,16 @@ class mymg
             // SetMG();
         }
         
-        void Add(TGraph *g1, string mytext) 
+        void Add(TGraph *g1, string mytext = "") 
         {
             mg1->Add(g1);
             // TLegend *l1 = new TLegend(.2,.2,.6,.4);
-            l1->AddEntry(g1,mytext.c_str());
-            l1->SetBorderSize(0);
-            // l1->SetTextSize(0.03);
-
+            if(mytext != "")
+            {
+                l1->AddEntry(g1,mytext.c_str());
+                l1->SetBorderSize(0);
+                // l1->SetTextSize(0.03);
+            }
         }
         void SetMG(char* xtitle, char* ytitle, float xmin, float xmax, float ymin, float ymax)
         {

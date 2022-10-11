@@ -33,7 +33,7 @@ args=parser.parse_args()
 
 
 if args.test:
-    test.Run(args.target)
+    test.Run()
     
 
 if args.ms:
@@ -94,23 +94,19 @@ if args.merge:
     # mymn.run()
 
     mymn = MergeNpy.MergeNpy()
-    mymn.SetPath(args.path)
-    mymn.SetType(args.target1)
+    # mymn.SetPath(args.path)
+    # mymn.SetType(args.target1)
+    # mymn.SetOutput(args.target2)
+    # mymn.run()
+    mymn.SetTarget(args.target1)
     mymn.SetOutput(args.target2)
-    mymn.run()
+    mymn.extractNull()
 
 if args.anta:
-    # mythrs = ANTA.Thrs()
-    # mypath = './totalnpy/Apr_threshold_origin_total.npy'
-    # mythrs.load(mypath)
-    # mythrs.printshape()
-    # mythrs.testshow()
-
     mythrs = ANTA.Thrs()
-    # mythrs.load(args.path)
-    # mythrs.allmaps(args.output,args.value)
-    # mythrs.allhist(args.output,args.value1,args.value2)
-    mythrs.savemeanastxt(args.target)
+    mythrs.load(args.path)
+    mythrs.SetOutput(args.output)
+    mythrs.highlowThrs()
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'
