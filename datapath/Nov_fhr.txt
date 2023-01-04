@@ -1,0 +1,5 @@
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI/data_20221103_202538/fhr/fhrscan-20221103_204151.raw
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI/data_20221103_211917/fhr/fhrscan-20221103_211918.raw
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI/data_20221103_220841/fhr/fhrscan-20221103_220842.raw
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI/data_20221103_225727/fhr/fhrscan-20221103_225727.raw
+/home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI/data_20221103_233321/fhr/fhrscan-20221103_233322.raw

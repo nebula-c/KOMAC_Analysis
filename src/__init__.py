@@ -4,5 +4,7 @@ __all__ = ['AllExtract',
             'test',
             'mythrscanana',
             'MergeNpy',
-            'ANTA'
+            'ANTA',
+            'Rowhitsana',
+            'MapCtrl'
             ]

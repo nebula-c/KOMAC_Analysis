@@ -1,11 +1,33 @@
 #!/bin/bash
 
+
+
+
+
+./sub.py -mc -t processed/totalnpy/Apr_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Apr_ff_projX_up.png
+./sub.py -mc -t processed/totalnpy/Jun_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jun_ff_projX_up.png
+./sub.py -mc -t processed/totalnpy/Jul_RAS_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jul_RAS_ff_projX_up.png
+./sub.py -mc -t processed/totalnpy/Jul_RPI_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jul_RPI_ff_projX_up.png
+./sub.py -mc -t processed/totalnpy/Sep_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Sep_ff_projX_up.png
+./sub.py -mc -t processed/totalnpy/Nov_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Nov_ff_projX_up.png
+
+# ./src/myhitmap.py 
+# /home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI
+
+
 #---------------------------------------------------------------------------------------------------
-./sub.py -a -p processed/totalnpy/Apr_threshold_revision_total.npy        -o length_Apr.png
-./sub.py -a -p processed/totalnpy/Jun_threshold_revision_total.npy        -o length_Jun.png
-./sub.py -a -p processed/totalnpy/Jul_RPI_threshold_revision_total.npy    -o length_Jul_RPI.png
-./sub.py -a -p processed/totalnpy/Jul_RAS_threshold_revision_total.npy    -o length_Jul_RAS.png
-./sub.py -a -p processed/totalnpy/Sep_threshold_revision_total.npy        -o length_Sep.png
+### Extract numpy
+# ./sub.py -ms --mode 4 -r /home/suchoi/KOMAC/analysis/datapath/Nov_raw.txt -j /home/suchoi/KOMAC/analysis/datapath/Nov_json.txt -p temp -o Nov
+# ./sub.py -ms --mode 2 -r /home/suchoi/KOMAC/analysis/datapath/Nov_raw.txt -j /home/suchoi/KOMAC/analysis/datapath/Nov_json.txt -p temp
+# ./sub.py -ms --mode 3 -r /home/suchoi/KOMAC/analysis/datapath/Nov_raw.txt -j /home/suchoi/KOMAC/analysis/datapath/Nov_json.txt -p temp
+
+
+# #---------------------------------------------------------------------------------------------------
+# ./sub.py -a -p processed/totalnpy/Apr_null_origin_total.npy        -o nullprojectionY_Apr.png
+# ./sub.py -a -p processed/totalnpy/Jun_null_origin_total.npy        -o nullprojectionY_Jun.png
+# ./sub.py -a -p processed/totalnpy/Jul_RPI_null_origin_total.npy    -o nullprojectionY_Jul_RPI.png
+# ./sub.py -a -p processed/totalnpy/Jul_RAS_null_origin_total.npy    -o nullprojectionY_Jul_RAS.png
+# ./sub.py -a -p processed/totalnpy/Sep_null_origin_total.npy        -o nullprojectionY_Sep.png
 
 
 

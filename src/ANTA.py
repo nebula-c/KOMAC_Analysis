@@ -14,16 +14,28 @@ import os
 class Thrs:
     __totalnpy = []
     __output = ''
+    __mydose_list = []
     
     def SetOutput(self,myoutput): self.__output = myoutput
     
     def load(self, path):
         self.__totalnpy = np.load(path)
     
+    def loaddose(self,target):
+        f = open(target,'r')
+        while True:
+            line = f.readline()
+            line = line.strip()
+            if not line: break
+            # print(line)
+            self.__mydose_list.append(float(line))
+        f.close()
+
+    
     def printshape(self,):
         print(np.shape(self.__totalnpy))
     
-    def allmaps(self,output,myhspace=0.3):
+    def allmaps(self,myhspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
         for i in range(0,np.shape(self.__totalnpy)[0]):
@@ -32,10 +44,10 @@ class Thrs:
             # plt.xlabel('row')
             # plt.ylabel('column')
             plt.colorbar()
-            plt.clim(0,1)
-            # plt.clim(0,200)
+            # plt.clim(0,1)
+            plt.clim(0,200)
         plt.subplots_adjust(hspace = myhspace)
-        plt.savefig(output,dpi=300)
+        plt.savefig(self.__output,dpi=300)
 
     def allhist(self,output,myhspace=0.3,mywspace=0.1):
         plt.figure(1,figsize=(7,9),facecolor='white')
@@ -87,21 +99,49 @@ class Thrs:
             meanthrs = list()
             
             for j in range(0,512):
-                meanthrs.append(np.sum(self.__totalnpy[i][j]))
-            
+                print(np.nanmean(self.__totalnpy[i][j]))
+                meanthrs.append(np.nanmean(self.__totalnpy[i][j])*10)
+            print(i)
             plt.plot(range(0,512),meanthrs)
-            
+            plt.xticks([0,100,200,300,400,500])
             
             plt.xlim(0,512)
-            plt.ylim(0.1024)
+            plt.ylim(70,160)
             plt.xlabel('row')
             plt.ylabel('#')
+            # break
             
 
         
         plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
         plt.savefig(self.__output,dpi=300)
         
+    def projectionX(self,myhspace=0.5,mywspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+    
+        for i in range(0,np.shape(self.__totalnpy)[0]):
+            plt.figure(1).add_subplot(int(np.shape(self.__totalnpy)[0]/2)+1,2,i+1)
+            meanthrs = list()
+            
+            for j in range(0,1024):
+                print(np.nanmean(self.__totalnpy[i,:,j]))
+                meanthrs.append(np.nanmean(self.__totalnpy[i,:,j])*10)
+            print(i)
+            plt.plot(range(0,512),meanthrs)
+            plt.xticks([0,100,200,300,400,500])
+            
+            plt.xlim(0,1024)
+            plt.ylim(70,160)
+            plt.xlabel('row')
+            plt.ylabel('#')
+            # break
+            
+
+        
+        plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
+        plt.savefig(self.__output,dpi=300)
+        
+    
     def recoverdosehisto(self,):
         plt.figure(1,figsize=(7,9),facecolor='white')
         
@@ -156,14 +196,22 @@ class Thrs:
         plt.plot(sub)
 
         plt.savefig('hl.png')
-
-class Rowhits:
-    __totalrowhits = []
-    __output = ''
-    
-    def SetOutput(self,myoutput): self.__output = myoutput
-    
-    def load(self, path):
-        self.__totalrowhits = np.load(path)
         
-                    
+    def numNull(self,mytitle=""):
+        plt.figure(1,figsize=(7,4),facecolor='white')
+        total_null_list = []
+        for ithr in range(0,np.shape(self.__totalnpy)[0]):
+            numNull_total = 0
+            for x in range(0,512):
+                for y in range(0,1024):
+                    # if self.__totalnpy[ithr][x][y] == 0:
+                    if np.isnan(self.__totalnpy[ithr][x][y]):
+                        numNull_total += 1
+            
+            print(numNull_total)
+            total_null_list.append(numNull_total)
+        plt.plot(self.__mydose_list,total_null_list,'o-')
+        plt.xlabel("dose(krad)")
+        plt.ylabel("# of Null Pixels")
+        plt.title(mytitle)
+        plt.savefig(self.__output)

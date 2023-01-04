@@ -21,7 +21,7 @@ class AllExtractNpy:
     
     __target_list_json = []
     __target_list_raw = []
-    
+    __target_list_hitmap = []
     
 
     def SetName(self, myname):    self.__outfilename = myname
@@ -39,6 +39,12 @@ class AllExtractNpy:
             onefile = onefile.split()
             self.__target_list_raw.append(onefile[0])
         
+    def __SetTarget_Hitmap(self, target_list_hitmap):
+        hitmapfiles = open('%s'%(target_list_hitmap))
+        for onefile in hitmapfiles:
+            onefile = onefile.split()
+            self.__target_list_hitmap.append(onefile[0])
+
 
     def SaveNpy(self,file_json,file_raw):
         TotalOriFireNum = []
@@ -168,7 +174,7 @@ class AllExtractNpy:
         print('Number of Target : %d'%len(self.__target_list_json))
         
         if len(self.__target_list_json) != len(self.__target_list_raw):
-            print("Error : Check target list fiel")
+            print("Error : Check the target list fiel")
             return 0
 
 
@@ -187,7 +193,128 @@ class AllExtractNpy:
         totalnpy = np.array(totalnpy)
         
         np.save('{}/{}'.format(self.__outpath,self.__outfilename),totalnpy)
+    
+    def DrawHitmap(self,target_list_hitmap):
+        myhspace = 0.2
+        mywspace = 0.3
         
+        self.__SetTarget_Hitmap(target_list_hitmap)
+        print('Number of Target : %d'%len(self.__target_list_hitmap))
+        
+
+        
+
+        for i in range(len(self.__target_list_hitmap)):
+            plt.figure(1).add_subplot(int(np.shape(self.__target_list_hitmap)[0]/2)+1,2,i+1)
+            
+            self.tempfunc(i)
+            
+            # plt.imshow(self.__totalnpy[i]*10,interpolation='none')#,vmin=0.1)
+            # plt.xlabel('row')
+            # plt.ylabel('column')
+            # plt.colorbar()
+            # plt.clim(0,1)
+            # plt.clim(0,200)
+        plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
+        plt.savefig(self.__outfilename,dpi=300)
+            
+        
+    def rebin(self, a, shape):
+        sh = shape[0],a.shape[0]//shape[0],shape[1],a.shape[1]//shape[1]
+        return a.reshape(sh).mean(-1).mean(1)
+    
+    def tempfunc(self,i_file):
+        # outfilename=args.rawdata.split("/")[-1].split(".")[0]
+
+
+        hm=np.zeros((512,1024))
+        mybins = 1
+        mymax = 10000
+        
+
+    # if args.dump_raw_hits:
+    #     fhits = open(os.path.join(args.path,outfilename+"_dump.txt"),'w')
+
+        nev=0
+        with open(self.__target_list_hitmap[i_file],'rb') as f:
+            d=f.read()
+            i=0
+            pbar=tqdm(total=len(d))
+            while i<len(d):
+                hits,iev,tev,j=decoder.decode_event(d,i)
+            #    if args.dump_raw_hits: fhits.write(f"Event {nev}\n")
+                nev+=1
+                for x,y in hits:
+                    hm[y,x]+=1
+                    # if args.dump_raw_hits: fhits.write(f"{x} {y}\n")
+                pbar.update(j-i)
+                i=j
+
+        # if args.dump_raw_hits:
+        #     fhits.close()
+
+        hitrate = {}
+        for nmasked in [0, 10, 100, 1000]:
+            hitrate[nmasked] = 1.*np.sum(np.sort(hm,axis=None)[::-1][nmasked:])/nev/512./1024.
+            print(f"Hit rate {nmasked: 5d} masked: {hitrate[nmasked]:.2e} per pixel per event")
+
+        # if args.dump_acc_hits:
+        #     with open(os.path.join(args.path,outfilename+"_freq.txt"), 'w') as f:
+        #         for nmasked in hitrate:
+        #             f.write(f"Hit rate {nmasked: 5d} masked: {hitrate[nmasked]:.2e} per pixel per event\n")
+        #         freq = [(hm[y,x],x,y) for x in range(1024) for y in range(512) if hm[y,x]>0]
+        #         for i,x,y in sorted(freq,reverse=True):
+        #             f.write(f"{x} {y} {i}\n")
+
+        # plt.figure(figsize=(10,5))
+        # cmap = copy.copy(plt.cm.get_cmap("viridis"))
+        cmap = copy.copy(plt.cm.get_cmap("winter"))
+        cmap.set_under(color='white')
+        im = plt.imshow(self.rebin(hm,(512//mybins,1024//mybins)),vmax=mymax, cmap=cmap, vmin=0.5)
+        # im = plt.imshow(self.rebin(hm,(512//mybins,1024//mybins)))
+        # plt.xlabel("Column")
+        plt.xticks([0,256,512,768,1023])
+        # plt.ylabel("Row")
+        plt.yticks([0,256,511])
+        # plt.title(f"Hit rate: {hitrate[0]:.2e} per pixel per event")
+        # plt.clim(0,100)
+        # divider = make_axes_locatable(plt.gca())
+        # cax = divider.append_axes("right", size="5%", pad=0.05)
+        # cbar = plt.colorbar(im,cax=cax)
+        cbar = plt.colorbar(im)
+        # cbar.set_label("Hits")
+        # plt.savefig(os.path.join(args.path,outfilename+".png"))
+        # plt.savefig
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__=="__main__":

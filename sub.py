@@ -19,9 +19,9 @@ parser.add_argument('-t1','--target1',help='Set target (list or not)')
 parser.add_argument('-t2','--target2',help='Set target (list)')
 parser.add_argument('-j','--json',help='Set json target list')
 parser.add_argument('-r','--raw',help='Set raw target list')
-parser.add_argument('-e','--extractnpy',action='store_true',help='Extract npy')
+# parser.add_argument('-e','--extractnpy',action='store_true',help='Extract npy')
 parser.add_argument('-f','--firenumana',action='store_true',help='Run analysis for Firenum')
-# parser.add_argument('-a','--allextractnpy',action='store_true',help='Extract npy')
+parser.add_argument('-e','--allextract',action='store_true',help='Extract npy')
 parser.add_argument('-m','--merge',action='store_true',help='Merge numpy files')
 parser.add_argument('-p','--path',help='path')
 parser.add_argument('-a','--anta',action='store_true',help='Analyzing Numpy-files for Threshold of ALPIDE(ANTA)')
@@ -29,6 +29,10 @@ parser.add_argument('-o','--output',help='output name')
 parser.add_argument('-v1','--value1',type=float,help='value1 for parameter')
 parser.add_argument('-v2','--value2',type=float,help='value2 for parameter')
 parser.add_argument('-c','--cpprun',action='store_true',help='Running some cpp file with root')
+parser.add_argument('--mode',type=int,help='Set mode(int)')
+parser.add_argument('--hitmap',action='store_true',help='hitmap')
+parser.add_argument('-mc','--mapctrl',action='store_true',help='Map control')
+parser.add_argument('-ro','--rowhit',action='store_true',help='rowhit')
 args=parser.parse_args()
 
 
@@ -37,76 +41,46 @@ if args.test:
     
 
 if args.ms:
-    mydir = './Sep'
-    os.system('mkdir %s'%mydir)
     myms = Multisub.Multisub()
-    myms.SetMode(5)
+    myms.SetMode(args.mode)
     myms.SetTarget2(args.json,args.raw)
-    myms.SetPath(mydir)
+    myms.SetPath(args.path)
+    myms.SetName(args.output)
     myms.Run()
 
 
-# if args.extractnpy:
-#     myen = ExtractNpy.ExtractNpy()
-#     # myen.Run(args.json,args.raw)
+if args.allextract:
+    myae = AllExtract.AllExtractNpy()
     
-#     myen.SetName("FireNum_ori_Jul_RAS.npy")
-#     myen.Combine_E(args.target,".npy")
-
-#     myen.SetName("Thrs_ori_Jul_RAS.npy")
-#     myen.Combine_E(args.target,"ori_thrs.npy")
+    # myae.SetPath(args.path)
+    myae.SetName(args.output)
+    # myae.Run(args.json,args.raw)
     
-#     myen.SetName("Noise_ori_Jul_RAS.npy")
-#     myen.Combine_E(args.target,"ori_noise.npy")
-
-#     myen.SetName("FireNum_rev_Jul_RAS.npy")
-#     myen.Combine_E(args.target,"rev_firenum.npy")
-
-#     myen.SetName("Thrs_rev_Jul_RAS.npy")
-#     myen.Combine_E(args.target,"rev_thrs.npy")
-
-#     myen.SetName("Noise_rev_Jul_RAS.npy")
-#     myen.Combine_E(args.target,"rev_noise.npy")
-
-
-
-# if args.firenumana:
-#     myfna = FireNum.FireNumAna()
-#     Apr_ori = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_ori_Apr.npy")
-#     Apr_rev = myfna.Thrsnpy("new_total_npy_dir/Apr/Thrs_rev_Apr.npy")
-#     Jun_ori = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_ori_Jun.npy")
-#     Jun_rev = myfna.Thrsnpy("new_total_npy_dir/Jun/Thrs_rev_Jun.npy")
-#     RAS_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_ori_Jul_RAS.npy")
-#     RAS_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RAS/Thrs_rev_Jul_RAS.npy")
-#     RPI_ori = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_ori_Jul_RPI.npy")
-#     RPI_rev = myfna.Thrsnpy("new_total_npy_dir/Jul_RPI/Thrs_rev_Jul_RPI.npy")
-
-#     a = RPI_ori
-#     a.DrawAllMaps()
-#     myfna.SaveImage("test.png")
-#     # myfna.SortPlot(a,b)
+    myae.DrawHitmap(args.raw)
     
 if args.merge:
-    # mymn = MergeNpy.MergeNpy()
-    # mymn.SetPath('eachdata/Apr/')
-    # mymn.SetType('rowhits_origin')
-    # mymn.SetOutput('Apr_rowhits_origin_total.npy')
-    # mymn.run()
-
     mymn = MergeNpy.MergeNpy()
+    mymn.SetPath('temp/')
+    mymn.SetType(args.target)
+    mymn.SetOutput(args.output)
+    mymn.run()
+
+    # mymn = MergeNpy.MergeNpy()
     # mymn.SetPath(args.path)
     # mymn.SetType(args.target1)
     # mymn.SetOutput(args.target2)
     # mymn.run()
-    mymn.SetTarget(args.target1)
-    mymn.SetOutput(args.target2)
-    mymn.extractNull()
+    # mymn.SetTarget(args.target1)
+    # mymn.SetOutput(args.target2)
+    # mymn.extractNull()
 
 if args.anta:
     mythrs = ANTA.Thrs()
-    mythrs.load(args.path)
-    mythrs.SetOutput(args.output)
-    mythrs.highlowThrs()
+    mythrs.load(args.target)
+    # mythrs.loaddose(args.target2)
+    # mythrs.SetOutput("test")
+    mythrs.SetOutput(args.path)
+    mythrs.projectionX()
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'
@@ -115,7 +89,72 @@ if args.cpprun:
     mycommand = """root '{}("{}","{}","{}")' -l -q""".format(cppfile,dosetxt,thrstxt,args.output)
     os.system(mycommand)
 
+
+if args.mapctrl:
+    mymapctrl = MapCtrl.MapCtrl()
+    # mymapctrl.loadtotalmap(args.target)
+    # mymapctrl.SetOutput(args.path)
+    # mymapctrl.XProjectionUp_row()
+    
+    
+    mymapctrl.SetOutput("test.png")
+    mymapctrl.AllNullScatter()
+    
+    
+    # Jul_RPI_path = "processed/totalnpy/Jul_RPI_rowhits_origin_total.npy"
+    # Nov_path = "processed/totalnpy/Nov_rowhits_origin_total.npy"
+    
+    # mymapctrl.loadtotalmap(Jul_RPI_path)
+    # mymapctrl.loadonemap(1)
+    # mymapctrl.Slice(500,600,0,400)
+    # mymapctrl.CountFakefire()
+    
+    # mymapctrl.loadtotalmap(Nov_path)
+    # mymapctrl.loadonemap(1)
+    # mymapctrl.Slice(500,600,0,400)
+    # mymapctrl.CountFakefire()
+    
+    
+    
+    # mymapctrl.SetOutput("region_example_below.png")
+    # mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
+    # mymapctrl.loadonemap(1)
+    # mymapctrl.Slice(0,1023,400,512)
+    # mymapctrl.printRegion()
+    
+    
+    # mymapctrl.printPartialRowhits()
+    
+    
+
+# ------------------------------------------------------------------------------------------
+# Main part using when don't want to use args
+# ------------------------------------------------------------------------------------------
+    # myms    = Multisub.Multisub()
+    # myae    = AllExtract.AllExtractNpy()
+    # mymn    = MergeNpy.MergeNpy()
+    # mythrs  = ANTA.Thrs()
+if args.rowhit:
+    myrha   = Rowhitsana.Rowhits()
+# 
+# 
+    myrha.load(args.target)
+    # myrha.printshape()
+    myrha.SetOutput(args.path)
+    myrha.projectionY()
+    # myrha.reshape(1,2,True)
+    # myrha.reshape(2,3,True)
+    
+    # myrha.rh1stvalmap(1)
+    # myrha.valNst(1)
+    # myrha.val1_10st(1)
+
+
+
+
+
 end = time.time()
 print("=========================================")
 print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
 print("=========================================")
+

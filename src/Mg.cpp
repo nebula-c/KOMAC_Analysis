@@ -44,13 +44,26 @@ class mymg
             mg1->GetXaxis()->SetLimits(xmin,xmax);
             mg1->SetMinimum(ymin);
             mg1->SetMaximum(ymax);
+            mg1->GetXaxis()->SetLabelSize(0.045);
+            mg1->GetYaxis()->SetLabelSize(0.045);
+            mg1->GetXaxis()->SetTitleSize(0.04);
+            mg1->GetYaxis()->SetTitleSize(0.04);
+            mg1->GetXaxis()->SetTitleOffset(1.2);
+            mg1->GetYaxis()->SetTitleOffset(1.2);
         }
         void Draw()
         {
             // TCanvas *c1 = new TCanvas();
 
-            mg1->Draw("alp");
-            if(isLegend) l1->Draw();
+            mg1->Draw("apl");
+            // mg1->Draw("ap");
+            if(isLegend)
+            {
+                l1->SetBorderSize(1);
+                // l1->SetTextSize(1.);
+                l1->SetTextSizePixels(20);
+                l1->Draw();
+            } 
         }
 
         void offLegend(){ isLegend = false; }
