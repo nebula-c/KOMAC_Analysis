@@ -8,7 +8,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-
+from mpl_toolkits.axes_grid1 import make_axes_locatable, axes_size
 
 import sys
 import os
@@ -50,6 +50,51 @@ class MapCtrl:
             plt.vlines(self.xmax, self.ymin, self.ymax, color='red', linestyle='solid', linewidth=3)
             plt.imshow(self.RemovedValMap)
         
+        def SetPCBRegion(self,):
+            plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 145
+            x11 = 150
+            x2 = 257
+            x22 = 300
+            x3 = 420
+            x33 = 427
+            
+            y11 = 512 - 200 - 10
+            y12 = 512 - 200 + 10
+            y13 = 512 - 200 + 10
+            y14 = 512 - 200 - 10
+            y2  = 512 - 456
+            y22 = 512 - 456
+            
+            plt.plot([x11,x3],  [y12,y13],  color='red',linewidth=1)
+            plt.plot([x3,x33],  [y13,y14] , color='red',linewidth=1)
+            plt.plot([x33,x22], [y14,y22],  color='red',linewidth=1)
+            plt.plot([x22,x2],  [y22,y2] ,  color='red',linewidth=1)
+            plt.plot([x2,x1],   [y2,y11] ,  color='red',linewidth=1)
+            plt.plot([x1,x11],  [y11,y12],  color='red',linewidth=1)
+            
+        def SetKaptonRegion(self,):
+            plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 679
+            x2 = 1024
+            x3 = 1024
+            x4 = 679
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+            
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='red',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='red',linewidth=1)
+            plt.plot([x3,x4],   [y3,y4],    color='red',linewidth=1)
+            plt.plot([x4,x1],   [y4,y1],    color='red',linewidth=1)
+            
+        
         
     myPM = PartialMap()
         
@@ -58,6 +103,11 @@ class MapCtrl:
     __output = 'test'
     __path = ''
 
+    def pltshow(self,): plt.show()
+    
+    def pltsave(self, myname): 
+        self.__output = myname
+        plt.savefig(self.__output,dpi=300)
         
     def SetOutput(self,myoutput): 
         self.__output = myoutput
@@ -101,6 +151,18 @@ class MapCtrl:
         self.myPM.SetLangeMap(myxmin,myxmax,myymin,myymax)
         # self.myPM.ShowPart()
         # plt.savefig(self.__output,dpi=300)
+    
+    def InputSubplot(self, myax, myimage):
+        im = plt.imshow(myimage,interpolation='none')
+        
+        aspect = 20
+        pad_fraction = 0.5
+        divider = make_axes_locatable(myax)
+        width = axes_size.AxesY(myax, aspect=1./aspect)
+        pad = axes_size.Fraction(pad_fraction, width)
+        cax = divider.append_axes("right", size=width, pad=pad)
+        plt.colorbar(cax=cax)
+        plt.clim(0,200)
         
     def CountNull(self,):
         mycount = 0
@@ -116,7 +178,34 @@ class MapCtrl:
             self.loadonemap(i)
             self.Slice(myxmin,myxmax,myymin,myymax)
             self.CountNull()
-            
+    
+    def ShowPCBPart(self,):
+        self.myPM.ShowPCB()
+    
+    def ShowAllPCB(self,):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        
+        for i in range(0,np.shape(self.__totalmap)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
+            plt.subplots_adjust(wspace = .35)
+            self.loadonemap(i)
+            self.myPM.SetPCBRegion()
+            self.InputSubplot(ax,self.myPM.OriginMap*10)    
+    
+    def ShowAllKapton(self,):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        # self.loadonemap(1)
+        # self.myPM.SetKaptonRegion()
+        # plt.imshow(self.myPM.OriginMap*10)
+        
+        for i in range(0,np.shape(self.__totalmap)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
+            plt.subplots_adjust(wspace = .35)
+            self.loadonemap(i)
+            self.myPM.SetKaptonRegion()
+            self.InputSubplot(ax,self.myPM.OriginMap*10)    
+        
+
     def XProjectionUp_row(self,myhspace=0.5,mywspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     

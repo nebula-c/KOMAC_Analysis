@@ -12,15 +12,17 @@ import os
 
 
 class Thrs:
-    __totalnpy = []
+    totalnpy = []
     __output = ''
     __mydose_list = []
     
     def SetOutput(self,myoutput): self.__output = myoutput
     
+    ### load npy file 
     def load(self, path):
-        self.__totalnpy = np.load(path)
+        self.totalnpy = np.load(path)
     
+    ### load Dose file 
     def loaddose(self,target):
         f = open(target,'r')
         while True:
@@ -31,16 +33,17 @@ class Thrs:
             self.__mydose_list.append(float(line))
         f.close()
 
-    
+    ### print shape of numpy
     def printshape(self,):
-        print(np.shape(self.__totalnpy))
+        print(np.shape(self.totalnpy))
     
+    ### print all maps of threshold npy
     def allmaps(self,myhspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
-        for i in range(0,np.shape(self.__totalnpy)[0]):
-            plt.figure(1).add_subplot(int(np.shape(self.__totalnpy)[0]/2)+1,2,i+1)
-            plt.imshow(self.__totalnpy[i]*10,interpolation='none')#,vmin=0.1)
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2)+1,2,i+1)
+            plt.imshow(self.totalnpy[i]*10,interpolation='none')#,vmin=0.1)
             # plt.xlabel('row')
             # plt.ylabel('column')
             plt.colorbar()
@@ -49,28 +52,32 @@ class Thrs:
         plt.subplots_adjust(hspace = myhspace)
         plt.savefig(self.__output,dpi=300)
 
+
+    ### pring all histogram of threshold npy
     def allhist(self,output,myhspace=0.3,mywspace=0.1):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
-        for i in range(0,np.shape(self.__totalnpy)[0]):
-            plt.figure(1).add_subplot(int(np.shape(self.__totalnpy)[0]/2)+1,2,i+1)
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2)+1,2,i+1)
             dvmax = 200
-            thresholds_draw = self.__totalnpy[i].ravel()*10
+            thresholds_draw = self.totalnpy[i].ravel()*10
             plt.hist(thresholds_draw,bins=dvmax,range=(0,dvmax))
             plt.xlim(0,dvmax)
-            # plt.title('Threshold: $\mu=%.2f,\ \sigma=%.2f$'%(np.nanmean(self.__totalnpy[i]*10),np.nanstd(self.__totalnpy[i]*10)))
+            # plt.title('Threshold: $\mu=%.2f,\ \sigma=%.2f$'%(np.nanmean(self.totalnpy[i]*10),np.nanstd(self.totalnpy[i]*10)))
             plt.xlabel('Threshold (DAC)')
             plt.ylabel('Pixels')
 
         plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
         plt.savefig(output,dpi=300)
 
+    ### print mean of threshold
     def meanthrs(self,):
-        for i in range(0,np.shape(self.__totalnpy)[0]):
-            thresholds = self.__totalnpy[i]
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            thresholds = self.totalnpy[i]
             thresholds[thresholds==0]=np.nan
             print('Threshold: %.2f +/- %.2f DAC (based on %d pixels)'%(np.nanmean(thresholds),np.nanstd(thresholds),int(np.sum(~np.isnan(thresholds)))))
 
+    ### Save means of thoreshold as text file
     def savemeanastxt(self,filepath):
         txtfile = open(filepath, 'r')
         filename = filepath.split('/')[len(filepath.split('/'))-1]
@@ -91,16 +98,17 @@ class Thrs:
         txtfile.close()
         newfile.close()
 
+    ### Print theshold projection for Y
     def projectionY(self,myhspace=0.5,mywspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
-        for i in range(0,np.shape(self.__totalnpy)[0]):
-            plt.figure(1).add_subplot(int(np.shape(self.__totalnpy)[0]/2)+1,2,i+1)
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2)+1,2,i+1)
             meanthrs = list()
             
             for j in range(0,512):
-                print(np.nanmean(self.__totalnpy[i][j]))
-                meanthrs.append(np.nanmean(self.__totalnpy[i][j])*10)
+                print(np.nanmean(self.totalnpy[i][j]))
+                meanthrs.append(np.nanmean(self.totalnpy[i][j])*10)
             print(i)
             plt.plot(range(0,512),meanthrs)
             plt.xticks([0,100,200,300,400,500])
@@ -116,16 +124,18 @@ class Thrs:
         plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
         plt.savefig(self.__output,dpi=300)
         
+        
+    ### Print theshold projection for X
     def projectionX(self,myhspace=0.5,mywspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
-        for i in range(0,np.shape(self.__totalnpy)[0]):
-            plt.figure(1).add_subplot(int(np.shape(self.__totalnpy)[0]/2)+1,2,i+1)
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2)+1,2,i+1)
             meanthrs = list()
             
             for j in range(0,1024):
-                print(np.nanmean(self.__totalnpy[i,:,j]))
-                meanthrs.append(np.nanmean(self.__totalnpy[i,:,j])*10)
+                print(np.nanmean(self.totalnpy[i,:,j]))
+                meanthrs.append(np.nanmean(self.totalnpy[i,:,j])*10)
             print(i)
             plt.plot(range(0,512),meanthrs)
             plt.xticks([0,100,200,300,400,500])
@@ -141,41 +151,43 @@ class Thrs:
         plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
         plt.savefig(self.__output,dpi=300)
         
-    
+    ### Make revision of origin npy file
     def recoverdosehisto(self,):
         plt.figure(1,figsize=(7,9),facecolor='white')
         
         recoverdose_list = []
         for x in range(0,512):
             for y in range(0,1024):
-                originthrs = self.__totalnpy[0][x][y]
-                for i in range(1,np.shape(self.__totalnpy)[0]):
-                    val = self.__totalnpy[i][x][y]
+                originthrs = self.totalnpy[0][x][y]
+                for i in range(1,np.shape(self.totalnpy)[0]):
+                    val = self.totalnpy[i][x][y]
                     if val <= originthrs:
                         recoverdose_list.append(i)
                         break
-        counts, bins, bars = plt.hist(recoverdose_list,range(np.shape(self.__totalnpy)[0]))
+        counts, bins, bars = plt.hist(recoverdose_list,range(np.shape(self.totalnpy)[0]))
         plt.grid(True)
         plt.title('Total Entry : {}({:.2f}%)'.format(round(sum(counts)),100*round(sum(counts))/(1024*512)))
         plt.savefig(self.__output,dpi=300)
     
+    
+    ### High and low threshold pixels(1 sigma)
     def highlowThrs(self,):
         plt.figure(1,figsize=(7,9),facecolor='white')
         
         highpixel = []
         lowpixel = []
         
-        # print(np.shape(self.__totalnpy[0]>np.nanmean(self.__totalnpy[0])))
-        # highpixel.append(self.__totalnpy[self.__totalnpy[0]>np.nanmean(self.__totalnpy[0]),:])
-        mymean = np.nanmean(self.__totalnpy[0])
-        mystd = np.nanstd(self.__totalnpy[0])
+        # print(np.shape(self.totalnpy[0]>np.nanmean(self.totalnpy[0])))
+        # highpixel.append(self.totalnpy[self.totalnpy[0]>np.nanmean(self.totalnpy[0]),:])
+        mymean = np.nanmean(self.totalnpy[0])
+        mystd = np.nanstd(self.totalnpy[0])
         for x in range(0,512):
             for y in range(0,1024):
-                originthrs = self.__totalnpy[0][x][y]
+                originthrs = self.totalnpy[0][x][y]
                 if originthrs > mymean + mystd*2:
-                    highpixel.append(self.__totalnpy[:,x,y].copy())
+                    highpixel.append(self.totalnpy[:,x,y].copy())
                 if originthrs < mymean - mystd*2:
-                    lowpixel.append(self.__totalnpy[:,x,y].copy())
+                    lowpixel.append(self.totalnpy[:,x,y].copy())
             print(x)
         # print(np.shape(highpixel))
         
@@ -184,7 +196,7 @@ class Thrs:
         
         highthrs = []
         lowthrs = []
-        for i in range(0,np.shape(self.__totalnpy)[0]):
+        for i in range(0,np.shape(self.totalnpy)[0]):
             highthrs.append(np.nanmean(highpixel[i])*10)
             lowthrs.append(np.nanmean(lowpixel[i])*10)
             
@@ -196,16 +208,17 @@ class Thrs:
         plt.plot(sub)
 
         plt.savefig('hl.png')
-        
+    
+    ### Pring number of null pixels
     def numNull(self,mytitle=""):
         plt.figure(1,figsize=(7,4),facecolor='white')
         total_null_list = []
-        for ithr in range(0,np.shape(self.__totalnpy)[0]):
+        for ithr in range(0,np.shape(self.totalnpy)[0]):
             numNull_total = 0
             for x in range(0,512):
                 for y in range(0,1024):
-                    # if self.__totalnpy[ithr][x][y] == 0:
-                    if np.isnan(self.__totalnpy[ithr][x][y]):
+                    # if self.totalnpy[ithr][x][y] == 0:
+                    if np.isnan(self.totalnpy[ithr][x][y]):
                         numNull_total += 1
             
             print(numNull_total)
@@ -215,3 +228,6 @@ class Thrs:
         plt.ylabel("# of Null Pixels")
         plt.title(mytitle)
         plt.savefig(self.__output)
+        
+    def testfunction(self,):
+        print("Hello, It is testfunction from ANTA.py")

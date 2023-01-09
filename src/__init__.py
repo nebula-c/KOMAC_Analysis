@@ -6,5 +6,6 @@ __all__ = ['AllExtract',
             'MergeNpy',
             'ANTA',
             'Rowhitsana',
-            'MapCtrl'
+            'MapCtrl',
+            'Subsub'
             ]

@@ -33,6 +33,7 @@ parser.add_argument('--mode',type=int,help='Set mode(int)')
 parser.add_argument('--hitmap',action='store_true',help='hitmap')
 parser.add_argument('-mc','--mapctrl',action='store_true',help='Map control')
 parser.add_argument('-ro','--rowhit',action='store_true',help='rowhit')
+parser.add_argument('-ss','--subsub',action='store_true',help='Subsub')
 args=parser.parse_args()
 
 
@@ -92,14 +93,19 @@ if args.cpprun:
 
 if args.mapctrl:
     mymapctrl = MapCtrl.MapCtrl()
-    # mymapctrl.loadtotalmap(args.target)
-    # mymapctrl.SetOutput(args.path)
-    # mymapctrl.XProjectionUp_row()
-    
     
     mymapctrl.SetOutput("test.png")
-    mymapctrl.AllNullScatter()
     
+    # mymapctrl.loadtotalmap("processed/totalnpy/Jun_threshold_revision_total.npy")
+    mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
+    mymapctrl.loadonemap(1)
+    mymapctrl.ShowAllPCB()
+    mymapctrl.ShowAllKapton()
+    # mymapctrl.pltshow()
+    mymapctrl.pltsave("test")
+    # ------------------------------------------------------------------------------------------
+    # For 2022-11 Exp.
+    # ------------------------------------------------------------------------------------------
     
     # Jul_RPI_path = "processed/totalnpy/Jul_RPI_rowhits_origin_total.npy"
     # Nov_path = "processed/totalnpy/Nov_rowhits_origin_total.npy"
@@ -134,6 +140,10 @@ if args.mapctrl:
     # myae    = AllExtract.AllExtractNpy()
     # mymn    = MergeNpy.MergeNpy()
     # mythrs  = ANTA.Thrs()
+
+
+
+
 if args.rowhit:
     myrha   = Rowhitsana.Rowhits()
 # 
@@ -150,7 +160,25 @@ if args.rowhit:
     # myrha.val1_10st(1)
 
 
+if args.subsub:
+    mysubsub    = Subsub.Subsub()
+    
+    NoPCB_data  = "processed/totalnpy/Jul_RPI_threshold_origin_total.npy"
+    PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
+    
+    mysubsub.loadthrs1(NoPCB_data)
+    # mysubsub.loadthrs1(PCB_data)
+    mysubsub.loadthrs2(PCB_data)
+    mysubsub.SetMap1(0)
+    mysubsub.SetMap2(0)
+    # mysubsub.PutNullas0()
 
+    mysubsub.rebin()
+    # mysubsub.subThrsMap()
+    # mysubsub.myrebin()
+    mysubsub.pltshow()
+    # mysubsub.pltsave("test")
+    
 
 
 end = time.time()
