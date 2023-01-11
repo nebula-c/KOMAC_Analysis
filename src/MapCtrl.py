@@ -15,6 +15,8 @@ import os
 import copy
 
 class MapCtrl:
+    def __init__(self,):
+        plt.figure(1,figsize=(7,9),facecolor='white')
     
     class PartialMap:
         OriginMap = []
@@ -26,6 +28,10 @@ class MapCtrl:
         ymin = 0
         ymax = 512
         
+        ### test function
+        def sayhi(self,):
+            print("hi")
+            
         def SetLangeMap(self,xmin,xmax,ymin,ymax):
             self.xmin = xmin
             self.xmax = xmax
@@ -51,7 +57,7 @@ class MapCtrl:
             plt.imshow(self.RemovedValMap)
         
         def SetPCBRegion(self,):
-            plt.figure(1,figsize=(7,9),facecolor='white')
+            # plt.figure(1,figsize=(7,9),facecolor='white')
             
             x1 = 145
             x11 = 150
@@ -75,7 +81,7 @@ class MapCtrl:
             plt.plot([x1,x11],  [y11,y12],  color='red',linewidth=1)
             
         def SetKaptonRegion(self,):
-            plt.figure(1,figsize=(7,9),facecolor='white')
+            # plt.figure(1,figsize=(7,9),facecolor='white')
             
             x1 = 679
             x2 = 1024
@@ -86,7 +92,6 @@ class MapCtrl:
             y2 = 429
             y3 = 512 - 512
             y4 = 512 - 512
-            
             
             
             plt.plot([x1,x2],   [y1,y2],    color='red',linewidth=1)
@@ -125,23 +130,23 @@ class MapCtrl:
         self.myPM.OriginMap = copy.deepcopy(self.__onemap)
     
     def printOneMap(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         plt.imshow(self.__onemap)
         plt.savefig(self.__output,dpi=300)
         
     def printRegion(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         self.myPM.ShowPart()
         # plt.imshow(self.myPM.PartialMap)
         plt.savefig(self.__output,dpi=300)
     
     def printPartial(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         plt.imshow(self.myPM.PartialMap)
         plt.savefig(self.__output,dpi=300)
 
     def printPartialRowhits(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         # plt.imshow(self.myPM.PartialMap)
         # plt.imshow(self.myPM.PartialMap[:,:,20])
         self.myPM.ShowPart_rowhits()
@@ -183,7 +188,7 @@ class MapCtrl:
         self.myPM.ShowPCB()
     
     def ShowAllPCB(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         
         for i in range(0,np.shape(self.__totalmap)[0]):
             ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
@@ -193,7 +198,7 @@ class MapCtrl:
             self.InputSubplot(ax,self.myPM.OriginMap*10)    
     
     def ShowAllKapton(self,):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
         # self.loadonemap(1)
         # self.myPM.SetKaptonRegion()
         # plt.imshow(self.myPM.OriginMap*10)
@@ -205,9 +210,18 @@ class MapCtrl:
             self.myPM.SetKaptonRegion()
             self.InputSubplot(ax,self.myPM.OriginMap*10)    
         
+    def ShowKaptonPCB(self,):
+        for i in range(0,np.shape(self.__totalmap)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
+            plt.subplots_adjust(wspace = .35)
+            self.loadonemap(i)
+            self.myPM.SetKaptonRegion()
+            self.myPM.SetPCBRegion()
+            self.InputSubplot(ax,self.myPM.OriginMap*10)
+            
 
     def XProjectionUp_row(self,myhspace=0.5,mywspace=0.3):
-        plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,9),facecolor='white')
     
         for i in range(0,np.shape(self.__totalmap)[0]):
             plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)

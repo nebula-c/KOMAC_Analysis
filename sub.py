@@ -99,50 +99,13 @@ if args.mapctrl:
     # mymapctrl.loadtotalmap("processed/totalnpy/Jun_threshold_revision_total.npy")
     mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
     mymapctrl.loadonemap(1)
-    mymapctrl.ShowAllPCB()
-    mymapctrl.ShowAllKapton()
+
+    mymapctrl.ShowKaptonPCB()
+    
     # mymapctrl.pltshow()
     mymapctrl.pltsave("test")
-    # ------------------------------------------------------------------------------------------
-    # For 2022-11 Exp.
-    # ------------------------------------------------------------------------------------------
-    
-    # Jul_RPI_path = "processed/totalnpy/Jul_RPI_rowhits_origin_total.npy"
-    # Nov_path = "processed/totalnpy/Nov_rowhits_origin_total.npy"
-    
-    # mymapctrl.loadtotalmap(Jul_RPI_path)
-    # mymapctrl.loadonemap(1)
-    # mymapctrl.Slice(500,600,0,400)
-    # mymapctrl.CountFakefire()
-    
-    # mymapctrl.loadtotalmap(Nov_path)
-    # mymapctrl.loadonemap(1)
-    # mymapctrl.Slice(500,600,0,400)
-    # mymapctrl.CountFakefire()
     
     
-    
-    # mymapctrl.SetOutput("region_example_below.png")
-    # mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
-    # mymapctrl.loadonemap(1)
-    # mymapctrl.Slice(0,1023,400,512)
-    # mymapctrl.printRegion()
-    
-    
-    # mymapctrl.printPartialRowhits()
-    
-    
-
-# ------------------------------------------------------------------------------------------
-# Main part using when don't want to use args
-# ------------------------------------------------------------------------------------------
-    # myms    = Multisub.Multisub()
-    # myae    = AllExtract.AllExtractNpy()
-    # mymn    = MergeNpy.MergeNpy()
-    # mythrs  = ANTA.Thrs()
-
-
-
 
 if args.rowhit:
     myrha   = Rowhitsana.Rowhits()
@@ -173,11 +136,12 @@ if args.subsub:
     mysubsub.SetMap2(0)
     # mysubsub.PutNullas0()
 
-    mysubsub.rebin()
-    # mysubsub.subThrsMap()
+    # mysubsub.rebin()
+    mysubsub.subThrsMap()
+    # mysubsub.testFunc()
     # mysubsub.myrebin()
-    mysubsub.pltshow()
-    # mysubsub.pltsave("test")
+    # mysubsub.pltshow()
+    mysubsub.pltsave("test")
     
 
 

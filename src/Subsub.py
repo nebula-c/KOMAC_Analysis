@@ -11,6 +11,7 @@
 
 from . import ANTA
 from . import Rowhitsana
+from . import MapCtrl
 
 import numpy as np
 import matplotlib
@@ -33,6 +34,9 @@ class Subsub:
     
     myrha1   = Rowhitsana.Rowhits()
     myrha2   = Rowhitsana.Rowhits()
+    
+    mymapctrl   =   MapCtrl.MapCtrl()
+    mymapctrl.PartMap = mymapctrl.PartialMap()
     
     def SetOutput(self,myoutput): self.__output = myoutput
     
@@ -59,9 +63,11 @@ class Subsub:
         
     def SetMap1(self,ith):
         self.mymap1 = self.mythrs1.totalnpy[ith]
+        self.mymap1 = self.mymap1 * 10
     
     def SetMap2(self,ith):
         self.mymap2 = self.mythrs2.totalnpy[ith]
+        self.mymap2 = self.mymap2 * 10
     
     def PutNullas0(self,):
         self.mymap1[np.isnan(self.mymap1)] = 0
@@ -72,28 +78,49 @@ class Subsub:
         self.resthrs.SetOutput("test")
         self.resthrs.allmaps()
         
+    def SetCbar(self, myax, myim):
+        
+        aspect = 20
+        pad_fraction = 0.5
+        divider = make_axes_locatable(myax)
+        width = axes_size.AxesY(myax, aspect=1./aspect)
+        pad = axes_size.Fraction(pad_fraction, width)
+        cax = divider.append_axes("right", size=width, pad=pad)
+        plt.colorbar(myim,cax=cax)
+        # plt.clim(0,200)
+        
+    ### map1 - map2
     def subThrsMap(self,):
         self.resmap = self.mymap1 - self.mymap2
+        # self.resmap = self.mymap2 - self.mymap1
         # self.resmap = self.mymap1
         
         plt.figure(1,figsize=(7,9),facecolor='white')
         ax = plt.axes()
-        im = ax.imshow(self.resmap)
+        im = plt.imshow(self.resmap)
+        plt.xlim(0,1024)
+        
+        self.mymapctrl.PartMap.SetPCBRegion()
+        self.mymapctrl.PartMap.SetKaptonRegion()
+                
+        self.SetCbar(ax,im)
+        
+
         
         ### Code for zbar
-        aspect = 20
-        pad_fraction = 0.5
-        divider = make_axes_locatable(ax)
-        width = axes_size.AxesY(ax, aspect=1./aspect)
-        pad = axes_size.Fraction(pad_fraction, width)
-        cax = divider.append_axes("right", size=width, pad=pad)
-        plt.colorbar(im,cax=cax)
+        # aspect = 20
+        # pad_fraction = 0.5
+        # divider = make_axes_locatable(ax)
+        # width = axes_size.AxesY(ax, aspect=1./aspect)
+        # pad = axes_size.Fraction(pad_fraction, width)
+        # cax = divider.append_axes("right", size=width, pad=pad)
+        # plt.colorbar(im,cax=cax)
         
         
     ### To draw 3d surface, incompleted
     def testFunc(self,):
         self.resmap = self.mymap1 - self.mymap2
-        # self.resmap = self.mymap2
+        # self.resmap = self.mymap1
         
         fig = plt.figure(1,figsize=(7,9),facecolor='white')
         ax = fig.add_subplot(111, projection='3d')
@@ -111,7 +138,7 @@ class Subsub:
         Z = np.sin(R)
         print(self.resmap)
         
-        # ax.view_init(90,0)
+        ax.view_init(0,0)
 
         surf = ax.plot_surface(X, Y, self.resmap,linewidth=0, antialiased=False)
 
