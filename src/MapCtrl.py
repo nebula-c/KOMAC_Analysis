@@ -22,6 +22,10 @@ class MapCtrl:
         OriginMap = []
         PartialMap = []
         RemovedValMap = []
+        extractPCBMap = []
+        extractKaptonMap = []
+        extractLeftMap = []
+        extractMidMap = []
         
         xmin = 0
         xmax = 1024
@@ -66,19 +70,19 @@ class MapCtrl:
             x3 = 420
             x33 = 427
             
-            y11 = 512 - 200 - 10
-            y12 = 512 - 200 + 10
-            y13 = 512 - 200 + 10
-            y14 = 512 - 200 - 10
+            y1 = 512 - 200 - 10
+            y11 = 512 - 200 + 10
             y2  = 512 - 456
             y22 = 512 - 456
+            y3 = 512 - 200 + 10
+            y33 = 512 - 200 - 10
             
-            plt.plot([x11,x3],  [y12,y13],  color='red',linewidth=1)
-            plt.plot([x3,x33],  [y13,y14] , color='red',linewidth=1)
-            plt.plot([x33,x22], [y14,y22],  color='red',linewidth=1)
+            plt.plot([x11,x3],  [y11,y3],  color='red',linewidth=1)
+            plt.plot([x3,x33],  [y3,y33] , color='red',linewidth=1)
+            plt.plot([x33,x22], [y33,y22],  color='red',linewidth=1)
             plt.plot([x22,x2],  [y22,y2] ,  color='red',linewidth=1)
-            plt.plot([x2,x1],   [y2,y11] ,  color='red',linewidth=1)
-            plt.plot([x1,x11],  [y11,y12],  color='red',linewidth=1)
+            plt.plot([x2,x1],   [y2,y1] ,  color='red',linewidth=1)
+            plt.plot([x1,x11],  [y1,y11],  color='red',linewidth=1)
             
         def SetKaptonRegion(self,):
             # plt.figure(1,figsize=(7,9),facecolor='white')
@@ -99,6 +103,134 @@ class MapCtrl:
             plt.plot([x3,x4],   [y3,y4],    color='red',linewidth=1)
             plt.plot([x4,x1],   [y4,y1],    color='red',linewidth=1)
             
+        def SetLeftRegion(self,):
+            # plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 0
+            x2 = 100
+            x3 = 100
+            x4 = 0
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='blue',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='blue',linewidth=1)
+            plt.plot([x3,x4],   [y3,y4],    color='blue',linewidth=1)
+            plt.plot([x4,x1],   [y4,y1],    color='blue',linewidth=1)
+        
+        def SetMidRegion(self,):
+            # plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 500
+            x2 = 600
+            x3 = 600
+            x4 = 500
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='blue',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='blue',linewidth=1)
+            plt.plot([x3,x4],   [y3,y4],    color='blue',linewidth=1)
+            plt.plot([x4,x1],   [y4,y1],    color='blue',linewidth=1)
+            
+        def ExtractPCB(self,):
+            
+            x1 = 145
+            x11 = 150
+            x2 = 257
+            x22 = 300
+            x3 = 420
+            x33 = 427
+            
+            y1 = 512 - 200 - 10
+            y11 = 512 - 200 + 10
+            y2  = 512 - 456
+            y22 = 512 - 456
+            y3 = 512 - 200 + 10
+            y33 = 512 - 200 - 10
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractPCBMap = mine[y22:y11,x1:x33]
+
+            
+            for y in range(y2-y2,y1-y2):
+                for x in range(x1-x1,x2-x1):
+                    if y < ((y2-y1)/(x2-x1)) * x + y1 - y2:
+                        self.extractPCBMap[y,x]=0
+            
+            for y in range(y22-y22,y33-y22):
+                for x in range(x22-x1,x33-x1):
+                    if y < ((y33-y22)/(x33-x22)) * x - y33:
+                        self.extractPCBMap[y,x]=0
+            
+            for y in range(y1-y2,y11-y2):
+                for x in range(x1-x1,x11-x1):
+                    if y > ((y11-y1)/(x11-x1)) * x + y1 - y2:
+                        self.extractPCBMap[y,x]=0
+            
+            for y in range(y33-y2,y3-y2):
+                for x in range(x3-x1,x33-x1):
+                    if y > ((y3-y33)/(x3-x33)) * x + 1051:
+                        self.extractPCBMap[y,x]=0
+            
+            
+            plt.imshow(self.extractPCBMap)
+            
+        def ExtractKapton(self,):
+            x1 = 679
+            x2 = 1024
+            x3 = 1024
+            x4 = 679
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+        
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractKaptonMap = mine[y3:y1,x1:x2]
+            
+            plt.imshow(self.extractKaptonMap)
+            
+        def ExtractLeft(self,):
+            x1 = 0
+            x2 = 100
+            x3 = 100
+            x4 = 0
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+        
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractLeftMap = mine[y3:y1,x1:x2]
+            
+            plt.imshow(self.extractLeftMap)
+        
+        def ExtractMid(self,):
+            x1 = 500
+            x2 = 600
+            x3 = 600
+            x4 = 500
+            
+            y1 = 429
+            y2 = 429
+            y3 = 512 - 512
+            y4 = 512 - 512
+        
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractMidMap = mine[y3:y1,x1:x2]
+            
+            plt.imshow(self.extractMidMap)
         
         
     myPM = PartialMap()
@@ -219,6 +351,26 @@ class MapCtrl:
             self.myPM.SetPCBRegion()
             self.InputSubplot(ax,self.myPM.OriginMap*10)
             
+    def ShowOtherRegion(self,):
+        for i in range(0,np.shape(self.__totalmap)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
+            plt.subplots_adjust(wspace = .35)
+            self.loadonemap(i)
+            self.myPM.SetLeftRegion()
+            self.myPM.SetMiddleRegion()
+            self.InputSubplot(ax,self.myPM.OriginMap*10)
+            
+    def ShowAllRegion(self,):
+        for i in range(0,np.shape(self.__totalmap)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.__totalmap)[0]/2)+1,2,i+1)
+            plt.subplots_adjust(wspace = .35)
+            self.loadonemap(i)
+            self.myPM.SetKaptonRegion()
+            self.myPM.SetPCBRegion()
+            self.myPM.SetLeftRegion()
+            self.myPM.SetMiddleRegion()
+            self.InputSubplot(ax,self.myPM.OriginMap*10)
+            
 
     def XProjectionUp_row(self,myhspace=0.5,mywspace=0.3):
         # plt.figure(1,figsize=(7,9),facecolor='white')
@@ -294,3 +446,15 @@ class MapCtrl:
             self.loadonemap(i)
             self.Slice(0,1023,400,512)
             plt.scatter(myenergy,self.CountFakefire(),color=mycolor,s=5)
+    
+    def ShowExtractPCB(self,):
+        self.myPM.ExtractPCB()
+
+    def ShowExtractKapton(self,):
+        self.myPM.ExtractKapton()
+    
+    def ShowExtractLeft(self,):
+        self.myPM.ExtractLeft()
+    
+    def ShowExtractMid(self,):
+        self.myPM.ExtractMid()

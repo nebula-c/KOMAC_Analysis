@@ -100,10 +100,12 @@ if args.mapctrl:
     mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
     mymapctrl.loadonemap(1)
 
-    mymapctrl.ShowKaptonPCB()
+    # mymapctrl.ShowKaptonPCB()
+    # mymapctrl.ShowAllRegion()
+    mymapctrl.ShowExtractMid()
     
-    # mymapctrl.pltshow()
-    mymapctrl.pltsave("test")
+    mymapctrl.pltshow()
+    # mymapctrl.pltsave("test")
     
     
 
@@ -129,18 +131,13 @@ if args.subsub:
     NoPCB_data  = "processed/totalnpy/Jul_RPI_threshold_origin_total.npy"
     PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
     
-    mysubsub.loadthrs1(NoPCB_data)
-    # mysubsub.loadthrs1(PCB_data)
+    # mysubsub.loadthrs1(NoPCB_data)
     mysubsub.loadthrs2(PCB_data)
-    mysubsub.SetMap1(0)
-    mysubsub.SetMap2(0)
+    # mysubsub.SetMap1(0)
+    # mysubsub.SetMap2(0)
     # mysubsub.PutNullas0()
-
-    # mysubsub.rebin()
-    mysubsub.subThrsMap()
-    # mysubsub.testFunc()
-    # mysubsub.myrebin()
-    # mysubsub.pltshow()
+    
+    mysubsub.SubThrsMapPack()
     mysubsub.pltsave("test")
     
 

@@ -18,10 +18,17 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable, axes_size
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.colors import LogNorm
+
+import copy
 
 matplotlib.use('TkAgg')  # Or any other X11 back-end
 
 class Subsub:
+    
+    def __init__(self,):
+        fig = plt.figure(1,figsize=(7,9),facecolor='white')
+    
     __output = ''
 
     mythrs1 = ANTA.Thrs()
@@ -90,14 +97,14 @@ class Subsub:
         # plt.clim(0,200)
         
     ### map1 - map2
-    def subThrsMap(self,):
+    def SubThrsMap(self,):
         self.resmap = self.mymap1 - self.mymap2
         # self.resmap = self.mymap2 - self.mymap1
         # self.resmap = self.mymap1
         
         plt.figure(1,figsize=(7,9),facecolor='white')
         ax = plt.axes()
-        im = plt.imshow(self.resmap)
+        im = plt.imshow(self.resmap, norm=LogNorm(vmin=0.01))
         plt.xlim(0,1024)
         
         self.mymapctrl.PartMap.SetPCBRegion()
@@ -153,8 +160,6 @@ class Subsub:
         sh = shape[0],targetmap.shape[0]//shape[0],shape[1],targetmap.shape[1]//shape[1]
         result =  targetmap.reshape(sh).mean(-1).mean(1)
         
-        
-        
         aspect = 20
         pad_fraction = 0.5
         divider = make_axes_locatable(ax)
@@ -174,3 +179,28 @@ class Subsub:
         pad = axes_size.Fraction(pad_fraction, width)
         cax = divider.append_axes("right", size=width, pad=pad)
         plt.colorbar(myimage,cax=cax)
+        
+    def SubThrsMapPack(self,):
+        self.mymap1 = self.mythrs2.totalnpy[0] * 10
+        
+        for i in range(0,np.shape(self.mythrs2.totalnpy)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.mythrs2.totalnpy)[0]/2)+1,2,i+1)
+            
+            self.SetMap2(i)
+            self.resmap = self.mymap2 - self.mymap1
+            # self.resmap = self.mymap2
+            
+            plt.subplots_adjust(wspace = .4)
+            # im = plt.imshow(self.resmap, norm=LogNorm(vmin=0.01))
+            im = plt.imshow(self.resmap)
+            plt.xlim(0,1024)
+            
+            self.mymapctrl.PartMap.SetPCBRegion()
+            self.mymapctrl.PartMap.SetKaptonRegion()
+            self.mymapctrl.PartMap.SetLeftRegion()
+            self.mymapctrl.PartMap.SetMiddleRegion()
+
+            self.SetCbar(ax,im)
+    
+
+        
