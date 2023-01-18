@@ -79,12 +79,16 @@ if args.anta:
     mythrs = ANTA.Thrs()
     
     # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
-    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
     # PCB_data    = args.path
-    # mythrs.load(PCB_data)
-    mythrs.SetOutput(args.output)
-    # mythrs.projectionX()
-    mythrs.All0kradThrsProj("X")
+    mythrs.load(PCB_data)
+    # mythrs.SetOutput(args.output)
+    mythrs.projectionX()
+    # mythrs.projectionY()
+    # mythrs.All0kradThrsProj("Y")
+
+    # mythrs.pltshow()
+    mythrs.pltsave("Nov_thrs_ProjX_Pad")
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'
