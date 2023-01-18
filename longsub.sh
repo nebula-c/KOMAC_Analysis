@@ -1,15 +1,21 @@
 #!/bin/bash
 
+# ./sub.py -a -p processed/totalnpy/Apr_threshold_origin_total.npy      -o Thrs_projX_Apr
+# ./sub.py -a -p processed/totalnpy/Jun_threshold_origin_total.npy      -o Thrs_projX_Jun
+# ./sub.py -a -p processed/totalnpy/Jul_RPI_threshold_origin_total.npy  -o Thrs_projX_Jul_RPI
+# ./sub.py -a -p processed/totalnpy/Jul_RAS_threshold_origin_total.npy  -o Thrs_projX_Jul_RAS
+# ./sub.py -a -p processed/totalnpy/Sep_threshold_origin_total.npy      -o Thrs_projX_Sep
+# ./sub.py -a -p processed/totalnpy/Nov_threshold_origin_total.npy      -o Thrs_projX_Nov
+
+./sub.py -a -p processed/totalnpy/Apr_threshold_revision_total.npy      -o Thrs_projX_Apr_
+./sub.py -a -p processed/totalnpy/Jun_threshold_revision_total.npy      -o Thrs_projX_Jun_
+./sub.py -a -p processed/totalnpy/Jul_RPI_threshold_revision_total.npy  -o Thrs_projX_Jul_RPI_
+./sub.py -a -p processed/totalnpy/Jul_RAS_threshold_revision_total.npy  -o Thrs_projX_Jul_RAS_
+./sub.py -a -p processed/totalnpy/Sep_threshold_revision_total.npy      -o Thrs_projX_Sep_
+./sub.py -a -p processed/totalnpy/Nov_threshold_revision_total.npy      -o Thrs_projX_Nov_
 
 
 
-
-./sub.py -mc -t processed/totalnpy/Apr_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Apr_ff_projX_up.png
-./sub.py -mc -t processed/totalnpy/Jun_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jun_ff_projX_up.png
-./sub.py -mc -t processed/totalnpy/Jul_RAS_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jul_RAS_ff_projX_up.png
-./sub.py -mc -t processed/totalnpy/Jul_RPI_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Jul_RPI_ff_projX_up.png
-./sub.py -mc -t processed/totalnpy/Sep_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Sep_ff_projX_up.png
-./sub.py -mc -t processed/totalnpy/Nov_rowhits_origin_total.npy -p ../pngs/fakefire_ProjX_up/Nov_ff_projX_up.png
 
 # ./src/myhitmap.py 
 # /home/suchoi/KOMAC/data/selected/KOMAC_2022_11/RPI

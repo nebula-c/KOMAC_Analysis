@@ -49,8 +49,10 @@ class Thrs:
             plt.colorbar()
             # plt.clim(0,1)
             plt.clim(0,200)
+            print(1024*512 - np.count_nonzero(~np.isnan(self.totalnpy[i]*10)))
         plt.subplots_adjust(hspace = myhspace)
         plt.savefig(self.__output,dpi=300)
+        
 
 
     ### pring all histogram of threshold npy
@@ -110,11 +112,12 @@ class Thrs:
                 print(np.nanmean(self.totalnpy[i][j]))
                 meanthrs.append(np.nanmean(self.totalnpy[i][j])*10)
             print(i)
-            plt.plot(range(0,512),meanthrs)
+            # plt.plot(range(0,512),meanthrs)
+            plt.scatter(range(0,512),meanthrs,s=.1)
             plt.xticks([0,100,200,300,400,500])
             
             plt.xlim(0,512)
-            plt.ylim(70,160)
+            plt.ylim(80,110)
             plt.xlabel('row')
             plt.ylabel('#')
             # break
@@ -137,11 +140,12 @@ class Thrs:
                 print(np.nanmean(self.totalnpy[i,:,j]))
                 meanthrs.append(np.nanmean(self.totalnpy[i,:,j])*10)
             print(i)
-            plt.plot(range(0,512),meanthrs)
-            plt.xticks([0,100,200,300,400,500])
+            plt.scatter(range(0,1024),meanthrs,s=.1)
+            # plt.plot(range(0,1024),meanthrs,s=.1)
+            plt.xticks([0,256,512,768,1024])
             
             plt.xlim(0,1024)
-            plt.ylim(70,160)
+            # plt.ylim(70,160)
             plt.xlabel('row')
             plt.ylabel('#')
             # break
@@ -231,3 +235,54 @@ class Thrs:
         
     def testfunction(self,):
         print("Hello, It is testfunction from ANTA.py")
+        
+    def All0kradThrsProj(self,myaxis="X",myhspace=0.5,mywspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        
+        exp_path=[
+                  "processed/totalnpy/Apr_threshold_origin_total.npy",
+                  "processed/totalnpy/Jun_threshold_origin_total.npy",
+                  "processed/totalnpy/Jul_RPI_threshold_origin_total.npy",
+                  "processed/totalnpy/Jul_RAS_threshold_origin_total.npy",
+                  "processed/totalnpy/Sep_threshold_origin_total.npy",
+                  "processed/totalnpy/Nov_threshold_origin_total.npy"
+                    ]
+        totaExpNum = np.shape(exp_path)[0]
+        
+        for i in range(0,totaExpNum):
+            plt.figure(1).add_subplot(totaExpNum/2+1,2,i+1)
+            self.load(exp_path[i])
+            meanthrs = list()
+            meanthrs_chip = 0
+            
+            if myaxis == "Y":
+                for j in range(0,512):
+                    meanthrs.append(np.nanmean(self.totalnpy[0][j])*10)    
+                    meanthrs_chip += np.nanmean(self.totalnpy[0][j])*10
+                plt.scatter(range(0,512),meanthrs,s=.1)
+                plt.xticks([0,100,200,300,400,500])
+                meanthrs_chip = meanthrs_chip/512
+                plt.xlim(0,512)
+                
+                plt.ylim(meanthrs_chip-15,meanthrs_chip+15)
+                plt.xlabel('row')
+                plt.ylabel('#')
+            
+            if myaxis == "X":
+                for j in range(0,1024):
+                    meanthrs.append(np.nanmean(self.totalnpy[0,:,j])*10)
+                plt.scatter(range(0,1024),meanthrs,s=.1)
+                plt.xticks([0,256,512,768,1024])
+                
+                plt.xlim(0,1024)
+                # plt.ylim(70,160)
+                plt.xlabel('column')
+                plt.ylabel('#')
+
+            
+
+        
+        plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
+        plt.savefig(self.__output,dpi=300)
+        
+    

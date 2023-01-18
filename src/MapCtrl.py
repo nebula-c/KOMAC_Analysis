@@ -22,10 +22,16 @@ class MapCtrl:
         OriginMap = []
         PartialMap = []
         RemovedValMap = []
+        
         extractPCBMap = []
         extractKaptonMap = []
         extractLeftMap = []
         extractMidMap = []
+        extractLEdgeMap = []
+        extractREdgeMap = []
+        extractBellowMap = []
+        
+        resultMap = []
         
         xmin = 0
         xmax = 1024
@@ -49,7 +55,7 @@ class MapCtrl:
             plt.hlines(self.ymax, self.xmin, self.xmax, color='red', linestyle='solid', linewidth=3)
             plt.vlines(self.xmin, self.ymin, self.ymax, color='red', linestyle='solid', linewidth=3)
             plt.vlines(self.xmax, self.ymin, self.ymax, color='red', linestyle='solid', linewidth=3)
-            plt.imshow(self.OriginMap)
+            plt.imshow(self.OriginMap,interpolation='none')
         
         def ShowPart_rowhits(self,):
             self.RemovedValMap =  copy.deepcopy(self.OriginMap[:,:,20])
@@ -58,7 +64,7 @@ class MapCtrl:
             plt.hlines(self.ymax, self.xmin, self.xmax, color='red', linestyle='solid', linewidth=3)
             plt.vlines(self.xmin, self.ymin, self.ymax, color='red', linestyle='solid', linewidth=3)
             plt.vlines(self.xmax, self.ymin, self.ymax, color='red', linestyle='solid', linewidth=3)
-            plt.imshow(self.RemovedValMap)
+            plt.imshow(self.RemovedValMap,interpolation='none')
         
         def SetPCBRegion(self,):
             # plt.figure(1,figsize=(7,9),facecolor='white')
@@ -140,6 +146,58 @@ class MapCtrl:
             plt.plot([x2,x3],   [y2,y3],    color='blue',linewidth=1)
             plt.plot([x3,x4],   [y3,y4],    color='blue',linewidth=1)
             plt.plot([x4,x1],   [y4,y1],    color='blue',linewidth=1)
+        
+        def SetLEdgeRegion(self,):
+            # plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 0
+            x2 = 71
+            x3 = 0
+            
+            y1 = 71
+            y2 = 0
+            y3 = 0
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='lawngreen',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='lawngreen',linewidth=1)
+            plt.plot([x3,x1],   [y3,y1],    color='lawngreen',linewidth=1)
+        
+        def SetREdgeRegion(self,):
+            # plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 953
+            x2 = 1024
+            x3 = 1024
+            
+            y1 = 0
+            y2 = 71
+            y3 = 0
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='lawngreen',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='lawngreen',linewidth=1)
+            plt.plot([x3,x1],   [y3,y1],    color='lawngreen',linewidth=1)
+            
+        def SetBelowRegion(self,):
+            # plt.figure(1,figsize=(7,9),facecolor='white')
+            
+            x1 = 0
+            x2 = 1024
+            x3 = 1024
+            x4 = 0
+            
+            y1 = 511
+            y2 = 511
+            y3 = 400
+            y4 = 400
+            
+            
+            plt.plot([x1,x2],   [y1,y2],    color='lawngreen',linewidth=1)
+            plt.plot([x2,x3],   [y2,y3],    color='lawngreen',linewidth=1)
+            plt.plot([x3,x4],   [y3,y4],    color='lawngreen',linewidth=1)
+            plt.plot([x4,x1],   [y4,y1],    color='lawngreen',linewidth=1)
+            
             
         def ExtractPCB(self,):
             
@@ -181,8 +239,8 @@ class MapCtrl:
                     if y > ((y3-y33)/(x3-x33)) * x + 1051:
                         self.extractPCBMap[y,x]=0
             
-            
-            plt.imshow(self.extractPCBMap)
+            self.resultMap = copy.deepcopy(self.extractPCBMap)
+            # plt.imshow(self.extractPCBMap)
             
         def ExtractKapton(self,):
             x1 = 679
@@ -198,7 +256,8 @@ class MapCtrl:
             mine = copy.deepcopy(self.OriginMap)
             self.extractKaptonMap = mine[y3:y1,x1:x2]
             
-            plt.imshow(self.extractKaptonMap)
+            self.resultMap = copy.deepcopy(self.extractKaptonMap)
+            # plt.imshow(self.extractKaptonMap)
             
         def ExtractLeft(self,):
             x1 = 0
@@ -214,7 +273,8 @@ class MapCtrl:
             mine = copy.deepcopy(self.OriginMap)
             self.extractLeftMap = mine[y3:y1,x1:x2]
             
-            plt.imshow(self.extractLeftMap)
+            self.resultMap = copy.deepcopy(self.extractLeftMap)
+            # plt.imshow(self.extractLeftMap)
         
         def ExtractMid(self,):
             x1 = 500
@@ -230,8 +290,251 @@ class MapCtrl:
             mine = copy.deepcopy(self.OriginMap)
             self.extractMidMap = mine[y3:y1,x1:x2]
             
-            plt.imshow(self.extractMidMap)
+            self.resultMap = copy.deepcopy(self.extractMidMap)
+            # plt.imshow(self.extractMidMap)
+            
+        def ExtractBellow(self,):
+            x1 = 0
+            x2 = 1024
+            x3 = 1024
+            x4 = 0
+            
+            y1 = 511
+            y2 = 511
+            y3 = 400
+            y4 = 400
         
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractBellowMap = mine[y3:y1,x1:x2]
+            
+            self.resultMap = copy.deepcopy(self.extractBellowMap)
+            # plt.imshow(self.extractBellowMap)
+            
+        def ExtractLEdge(self,):
+            
+            x1 = 0
+            x2 = 71
+            x3 = 0
+            
+            y1 = 71
+            y2 = 0
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractLEdgeMap = mine[y2:y1,x1:x2]
+
+            
+            for y in range(y3,y1):
+                for x in range(x3,x2):
+                    if y >= -x + y1:
+                        self.extractLEdgeMap[y,x]=0
+            
+            
+            self.resultMap = copy.deepcopy(self.extractLEdgeMap)
+            # plt.imshow(self.resultMap)
+        
+        def ExtractREdge(self,):
+            
+            x1 = 953
+            x2 = 1024
+            x3 = 1024
+            
+            y1 = 0
+            y2 = 71
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractREdgeMap = mine[y1:y2,x1:x2]
+
+            
+            for y in range(y3,y2):
+                for x in range(x1-x1,x2-x1):
+                    if y > x:
+                        self.extractREdgeMap[y,x]=0
+            
+            
+            self.resultMap = copy.deepcopy(self.extractREdgeMap)
+            # plt.imshow(self.resultMap)
+        
+        ### Change values outside PCB as -1000
+        def ConvertPCBOutside(self,):
+            x1 = 145
+            x11 = 150
+            x2 = 257
+            x22 = 300
+            x3 = 420
+            x33 = 427
+            
+            y1 = 512 - 200 - 10
+            y11 = 512 - 200 + 10
+            y2  = 512 - 456
+            y22 = 512 - 456
+            y3 = 512 - 200 + 10
+            y33 = 512 - 200 - 10
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractPCBMap = mine[y22:y11,x1:x33]
+
+            
+            for y in range(y2-y2,y1-y2):
+                for x in range(x1-x1,x2-x1):
+                    if y < ((y2-y1)/(x2-x1)) * x + y1 - y2:
+                        self.extractPCBMap[y,x]= -1000
+            
+            for y in range(y22-y22,y33-y22):
+                for x in range(x22-x1,x33-x1):
+                    if y < ((y33-y22)/(x33-x22)) * x - y33:
+                        self.extractPCBMap[y,x]= -1000
+            
+            for y in range(y1-y2,y11-y2):
+                for x in range(x1-x1,x11-x1):
+                    if y > ((y11-y1)/(x11-x1)) * x + y1 - y2:
+                        self.extractPCBMap[y,x]= -1000
+            
+            for y in range(y33-y2,y3-y2):
+                for x in range(x3-x1,x33-x1):
+                    if y > ((y3-y33)/(x3-x33)) * x + 1051:
+                        self.extractPCBMap[y,x]= -1000
+                        
+            self.resultMap = copy.deepcopy(self.extractPCBMap)
+            
+        def ConvertLEdgeOutside(self,):
+            
+            x1 = 0
+            x2 = 71
+            x3 = 0
+            
+            y1 = 71
+            y2 = 0
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractLEdgeMap = mine[y2:y1,x1:x2]
+
+            
+            for y in range(y3,y1):
+                for x in range(x3,x2):
+                    if y > -x + y1:
+                        self.extractLEdgeMap[y,x]=-1000
+            
+            
+            self.resultMap = copy.deepcopy(self.extractLEdgeMap)
+            
+        def ConvertREdgeOutside(self,):
+            
+            x1 = 953
+            x2 = 1024
+            x3 = 1024
+            
+            y1 = 0
+            y2 = 71
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractREdgeMap = mine[y1:y2,x1:x2]
+
+            
+            for y in range(y3,y2):
+                for x in range(x1-x1,x2-x1):
+                    if y > x:
+                        self.extractREdgeMap[y,x]=-1000
+            
+            
+            self.resultMap = copy.deepcopy(self.extractREdgeMap)
+            plt.imshow(self.resultMap)
+        
+        def ExtractAll(self,):
+            self.resultMap = copy.deepcopy(self.OriginMap)
+            
+        def NumberOfOutsidePCBpixel(self,):
+            x1 = 145
+            x11 = 150
+            x2 = 257
+            x22 = 300
+            x3 = 420
+            x33 = 427
+            
+            y1 = 512 - 200 - 10
+            y11 = 512 - 200 + 10
+            y2  = 512 - 456
+            y22 = 512 - 456
+            y3 = 512 - 200 + 10
+            y33 = 512 - 200 - 10
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractPCBMap = mine[y22:y11,x1:x33]
+
+            countoutside = 0
+            
+            for y in range(y2-y2,y1-y2):
+                for x in range(x1-x1,x2-x1):
+                    if y < ((y2-y1)/(x2-x1)) * x + y1 - y2:
+                        countoutside += 1
+            
+            for y in range(y22-y22,y33-y22):
+                for x in range(x22-x1,x33-x1):
+                    if y < ((y33-y22)/(x33-x22)) * x - y33:
+                        countoutside += 1
+            
+            for y in range(y1-y2,y11-y2):
+                for x in range(x1-x1,x11-x1):
+                    if y > ((y11-y1)/(x11-x1)) * x + y1 - y2:
+                        countoutside += 1
+            
+            for y in range(y33-y2,y3-y2):
+                for x in range(x3-x1,x33-x1):
+                    if y > ((y3-y33)/(x3-x33)) * x + 1051:
+                        countoutside += 1
+                        
+            return countoutside
+        
+        def NumberOfOutsideLEdgepixel(self,):
+            x1 = 0
+            x2 = 71
+            x3 = 0
+            
+            y1 = 71
+            y2 = 0
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractLEdgeMap = mine[y2:y1,x1:x2]
+
+            countoutside = 0
+            
+            for y in range(y3,y1):
+                for x in range(x3,x2):
+                    if y >= -x + y1:
+                        countoutside += 1
+            
+            return countoutside
+        
+        def NumberOfOutsideREdgepixel(self,):
+            x1 = 953
+            x2 = 1024
+            x3 = 1024
+            
+            y1 = 0
+            y2 = 71
+            y3 = 0
+            
+            
+            mine = copy.deepcopy(self.OriginMap)
+            self.extractREdgeMap = mine[y1:y2,x1:x2]
+
+            countoutside = 0
+            
+            for y in range(y3,y2):
+                for x in range(x1-x1,x2-x1):
+                    if y > x:
+                        countoutside += 1
+            
+            return countoutside
         
     myPM = PartialMap()
         
@@ -260,11 +563,15 @@ class MapCtrl:
     def loadonemoremap(self, ith):
         self.__onemap = self.__onemap[ith]
         self.myPM.OriginMap = copy.deepcopy(self.__onemap)
+        
+    def copynpyfrom(self, npyfromotherside):
+        self.__onemap = npyfromotherside
+        self.myPM.OriginMap = copy.deepcopy(self.__onemap)
     
     def printOneMap(self,):
         # plt.figure(1,figsize=(7,9),facecolor='white')
-        plt.imshow(self.__onemap)
-        plt.savefig(self.__output,dpi=300)
+        plt.imshow(self.__onemap,interpolation='none')
+        # plt.savefig(self.__output,dpi=300)
         
     def printRegion(self,):
         # plt.figure(1,figsize=(7,9),facecolor='white')
@@ -274,7 +581,7 @@ class MapCtrl:
     
     def printPartial(self,):
         # plt.figure(1,figsize=(7,9),facecolor='white')
-        plt.imshow(self.myPM.PartialMap)
+        plt.imshow(self.myPM.PartialMap,interpolation='none')
         plt.savefig(self.__output,dpi=300)
 
     def printPartialRowhits(self,):
@@ -300,6 +607,19 @@ class MapCtrl:
         cax = divider.append_axes("right", size=width, pad=pad)
         plt.colorbar(cax=cax)
         plt.clim(0,200)
+    
+    def SetCbar(self, myax, myim):
+        
+        aspect = 20
+        pad_fraction = 0.5
+        divider = make_axes_locatable(myax)
+        width = axes_size.AxesY(myax, aspect=1./aspect)
+        pad = axes_size.Fraction(pad_fraction, width)
+        cax = divider.append_axes("right", size=width, pad=pad)
+        plt.colorbar(myim,cax=cax)
+        # plt.clim(-30,30)
+        plt.clim(0,200)
+        
         
     def CountNull(self,):
         mycount = 0
@@ -368,8 +688,27 @@ class MapCtrl:
             self.myPM.SetKaptonRegion()
             self.myPM.SetPCBRegion()
             self.myPM.SetLeftRegion()
-            self.myPM.SetMiddleRegion()
+            self.myPM.SetMidRegion()
+            self.myPM.SetLEdgeRegion()
+            self.myPM.SetREdgeRegion()
+            self.myPM.SetBelowRegion()
             self.InputSubplot(ax,self.myPM.OriginMap*10)
+    
+    def ShowAllRegion_onemap(self,):
+        ax = plt.figure(1,figsize=(7,9),facecolor='white')
+        self.myPM.SetKaptonRegion()
+        self.myPM.SetPCBRegion()
+        self.myPM.SetLeftRegion()
+        self.myPM.SetMidRegion()
+        self.myPM.SetLEdgeRegion()
+        self.myPM.SetREdgeRegion()
+        self.myPM.SetBelowRegion()
+        
+        ax = plt.axes()
+        im = plt.imshow(self.myPM.OriginMap*10,interpolation='none')
+        self.SetCbar(ax,im)
+        
+        
             
 
     def XProjectionUp_row(self,myhspace=0.5,mywspace=0.3):
@@ -452,9 +791,37 @@ class MapCtrl:
 
     def ShowExtractKapton(self,):
         self.myPM.ExtractKapton()
-    
+        
     def ShowExtractLeft(self,):
         self.myPM.ExtractLeft()
     
     def ShowExtractMid(self,):
         self.myPM.ExtractMid()
+    
+    def ShowExtractBellow(self,):
+        self.myPM.ExtractBellow()
+        
+    def ShowExtractLEdge(self,):
+        self.myPM.ExtractLEdge()
+        
+    def ShowExtractREdge(self,):
+        self.myPM.ExtractREdge()
+        
+    def ShowNumPixelSomeRegion(self,):
+        numLEdge = self.myPM.NumberOfOutsideLEdgepixel()
+        numREdge = self.myPM.NumberOfOutsideREdgepixel()
+        numPCB = self.myPM.NumberOfOutsidePCBpixel()
+        
+        total_num_LEdge =   0
+        total_num_REdge =   0
+        total_num_PCB   =   0
+        
+        print("Number of pixel @ Outside of Left Edge : {}".format(numLEdge))
+        print("Number of pixel @ Outside of Right Edge : {}".format(numREdge))
+        print("Number of pixel @ Outside of PCB Edge : {}".format(numPCB))
+        
+        print("--------------------------------------------------------")
+        
+        print("Number of pixel @ Outside of Left Edge : {}".format(numLEdge))
+        print("Number of pixel @ Outside of Right Edge : {}".format(numREdge))
+        print("Number of pixel @ Outside of PCB Edge : {}".format(numPCB))

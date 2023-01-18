@@ -77,11 +77,14 @@ if args.merge:
 
 if args.anta:
     mythrs = ANTA.Thrs()
-    mythrs.load(args.target)
-    # mythrs.loaddose(args.target2)
-    # mythrs.SetOutput("test")
-    mythrs.SetOutput(args.path)
-    mythrs.projectionX()
+    
+    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
+    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    # PCB_data    = args.path
+    # mythrs.load(PCB_data)
+    mythrs.SetOutput(args.output)
+    # mythrs.projectionX()
+    mythrs.All0kradThrsProj("X")
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'
@@ -98,14 +101,15 @@ if args.mapctrl:
     
     # mymapctrl.loadtotalmap("processed/totalnpy/Jun_threshold_revision_total.npy")
     mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
-    mymapctrl.loadonemap(1)
+    mymapctrl.loadonemap(0)
 
-    # mymapctrl.ShowKaptonPCB()
-    # mymapctrl.ShowAllRegion()
-    mymapctrl.ShowExtractMid()
     
-    mymapctrl.pltshow()
-    # mymapctrl.pltsave("test")
+    mymapctrl.ShowNumPixelSomeRegion()
+    # mymapctrl.ShowExtractLEdge()
+    
+    
+    # mymapctrl.pltshow()
+    mymapctrl.pltsave("test")
     
     
 
@@ -131,14 +135,25 @@ if args.subsub:
     NoPCB_data  = "processed/totalnpy/Jul_RPI_threshold_origin_total.npy"
     PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
     
-    # mysubsub.loadthrs1(NoPCB_data)
+    mysubsub.loadthrs1(NoPCB_data)
     mysubsub.loadthrs2(PCB_data)
-    # mysubsub.SetMap1(0)
-    # mysubsub.SetMap2(0)
+    mysubsub.SetMap1(0)
+    mysubsub.SetMap2(0)
     # mysubsub.PutNullas0()
     
-    mysubsub.SubThrsMapPack()
-    mysubsub.pltsave("test")
+    # mysubsub.SubThrsMap()
+    # mysubsub.SubThrsMap_3D()
+    
+    # mymode = args.target
+    mysubsub.NullPackPartHisto_All()
+    # mysubsub.NullPackPartHistoForArea_All()
+    # mysubsub.ThrsMapPackPartHisto_All()
+    
+    
+    # myoutput = args.output
+    myoutput = "test"
+    # mysubsub.pltshow()
+    mysubsub.pltsave(myoutput)
     
 
 
