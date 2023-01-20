@@ -78,17 +78,24 @@ if args.merge:
 if args.anta:
     mythrs = ANTA.Thrs()
     
-    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
-    PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
     # PCB_data    = args.path
-    mythrs.load(PCB_data)
-    # mythrs.SetOutput(args.output)
-    mythrs.projectionX()
+    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
+    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    # dosedata    = "doseinfo/Nov_dose.txt"
+    # mythrs.load(PCB_data)
+    # mythrs.loaddose(dosedata)
+    # mythrs.SetAllMonthsData()
+    # mythrs.printshape()
+    
+    mythrs.OddEvenRowThrs_all()
     # mythrs.projectionY()
     # mythrs.All0kradThrsProj("Y")
 
+    
+
     # mythrs.pltshow()
-    mythrs.pltsave("Nov_thrs_ProjX_Pad")
+    mythrs.pltsave("All_OddEven_thrs_dose")
+    # mythrs.pltsave("All_thrs_ProjY_Pad")
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'

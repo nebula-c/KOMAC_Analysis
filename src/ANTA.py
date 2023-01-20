@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 import sys
 import os
+import itertools
 
 
 class Thrs:
@@ -44,17 +45,38 @@ class Thrs:
             # print(line)
             self.__mydose_list.append(float(line))
         f.close()
+        
+    def resetdoselist(self,):
+        self.__mydose_list = []
 
     ### print shape of numpy
     def printshape(self,):
         print(np.shape(self.totalnpy))
+    
+    ### Load All data @ 0krad
+    def SetAllMonthsData(self,):
+        exp_path=[
+                  "processed/totalnpy/Apr_threshold_origin_total.npy",
+                  "processed/totalnpy/Jun_threshold_origin_total.npy",
+                  "processed/totalnpy/Jul_RPI_threshold_origin_total.npy",
+                  "processed/totalnpy/Jul_RAS_threshold_origin_total.npy",
+                  "processed/totalnpy/Sep_threshold_origin_total.npy",
+                  "processed/totalnpy/Nov_threshold_origin_total.npy"
+                    ]
+        totaExpNum = np.shape(exp_path)[0]
+        
+        mine=[]
+        for i in range(0,totaExpNum):
+            tempnpy = np.load(exp_path[i])
+            mine.append(tempnpy[0])
+        self.totalnpy = np.array(mine)
     
     ### print all maps of threshold npy
     def allmaps(self,myhspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
     
         for i in range(0,np.shape(self.totalnpy)[0]):
-            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2)+1,2,i+1)
+            plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2),2,i+1)
             plt.imshow(self.totalnpy[i]*10,interpolation='none')#,vmin=0.1)
             # plt.xlabel('row')
             # plt.ylabel('column')
@@ -127,12 +149,12 @@ class Thrs:
             meanthrs_chip = np.nanmean(meanthrs)
             
             plt.xlim(0,512)
-            self.ShowPadY()
+            # self.ShowPadY()
             plt.ylim(meanthrs_chip-15,meanthrs_chip+15)
             plt.xticks([0,100,200,300,400,500])
             
             plt.xlabel('row')
-            plt.ylabel('#')
+            plt.ylabel('threshold')
             # break
             
 
@@ -151,7 +173,7 @@ class Thrs:
             
             for j in range(0,1024):
                 meanthrs.append(np.nanmean(self.totalnpy[i,:,j])*10)
-
+                
             plt.scatter(range(0,1024),meanthrs,s=.1)
             meanthrs_chip = np.nanmean(meanthrs)
                 
@@ -161,8 +183,8 @@ class Thrs:
             plt.xticks([0,256,512,768,1024])
             
             
-            plt.xlabel('row')
-            plt.ylabel('#')
+            plt.xlabel('column')
+            plt.ylabel('threshold')
             # break
             
 
@@ -251,8 +273,10 @@ class Thrs:
     def testfunction(self,):
         print("Hello, It is testfunction from ANTA.py")
         
+    ### I made SetAllMonthsData function, so it is not need anymore
     def All0kradThrsProj(self,myaxis="X",myhspace=0.5,mywspace=0.3):
         plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(5,7),facecolor='white')
         
         exp_path=[
                   "processed/totalnpy/Apr_threshold_origin_total.npy",
@@ -265,10 +289,12 @@ class Thrs:
         totaExpNum = np.shape(exp_path)[0]
         
         for i in range(0,totaExpNum):
-            plt.figure(1).add_subplot(totaExpNum/2+1,2,i+1)
+            plt.figure(1).add_subplot(totaExpNum/2,2,i+1)
+            # i=5
             self.load(exp_path[i])
-            meanthrs = list()
             
+            meanthrs = list()
+
             if myaxis == "Y":
                 for j in range(0,512):
                     meanthrs.append(np.nanmean(self.totalnpy[0][j])*10)    
@@ -281,23 +307,37 @@ class Thrs:
                 self.ShowPadY()
                 plt.ylim(meanthrs_chip-15,meanthrs_chip+15)
                 plt.xlabel('row')
-                plt.ylabel('#')
+                plt.ylabel('threshold')
             
             if myaxis == "X":
                 for j in range(0,1024):
                     meanthrs.append(np.nanmean(self.totalnpy[0,:,j])*10)
-                    meanthrs_chip += np.nanmean(self.totalnpy[0,:,j])*10
+                
+                ### Color distribution
+                ###------------------------------------------------------
+                # for j in range(0,1024):
+                #     mod = j%4
+                #     if mod == 0:
+                #         plt.scatter(j,meanthrs[j],s=.3,color="red")
+                #     if mod == 1:
+                #         plt.scatter(j,meanthrs[j],s=.3,color="green")
+                #     if mod == 2:
+                #         plt.scatter(j,meanthrs[j],s=.3,color="orange")
+                #     if mod == 3:
+                #         plt.scatter(j,meanthrs[j],s=.3,color="blue")
+                ###------------------------------------------------------
+                
                 plt.scatter(range(0,1024),meanthrs,s=.1)
-
                 plt.xticks([0,256,512,768,1024])
-                meanthrs_chip = meanthrs_chip/1024
+                meanthrs_chip = np.nanmean(meanthrs)
                 
                 plt.xlim(0,1024)
                 self.ShowPadX()
                 plt.ylim(meanthrs_chip-15,meanthrs_chip+15)
                 plt.xlabel('column')
-                plt.ylabel('#')
+                plt.ylabel('threshold')
 
+            # break
             
 
         
@@ -411,3 +451,111 @@ class Thrs:
         plt.plot([p4_f,p4_f],    [0,1023],  color='red',linewidth=mylinewidth)
         plt.plot([p5_i,p5_i],    [0,1023],  color='red',linewidth=mylinewidth)
         plt.plot([p5_f,p5_f],    [0,1023],  color='red',linewidth=mylinewidth)
+    
+    def OddEvenRowThrs_projX(self,myhspace=0.5,mywspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        
+        self.SetAllMonthsData()
+        
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.totalnpy)[0]/2),2,i+1)
+            meanthrs_odd = list()
+            meanthrs_even = list()
+            
+            for j in range(0,1024):
+                if j%2 == 0:
+                    meanthrs_even.append(np.nanmean(self.totalnpy[i,:,j])*10)
+                else :
+                    meanthrs_odd.append(np.nanmean(self.totalnpy[i,:,j])*10)
+                    
+            plt.scatter(range(0,1024,2),meanthrs_even,s=.1,color='red')
+            plt.scatter(range(1,1024,2),meanthrs_odd,s=.1,color='blue')
+            meanthrs_chip = np.nanmean(meanthrs_even + meanthrs_odd)
+                
+            plt.xlim(0,512)
+            self.ShowPadX()
+            plt.ylim(meanthrs_chip-15,meanthrs_chip+15)
+            plt.xticks([0,256,512,768,1024])
+            
+            
+            plt.xlabel('column')
+            plt.ylabel('threshold')
+            # break
+            
+
+        
+        plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
+        
+    def OddEvenRowThrs(self,myhspace=0.5,mywspace=0.3,mymarkersize=1.,isall=False):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        
+        meanthrs_all = list()
+        meanthrs_odd_all = list()
+        meanthrs_even_all = list()
+
+        for i in range(0,np.shape(self.totalnpy)[0]):
+            meanthrs_odd_one_chip = list()
+            meanthrs_even_one_chip = list()
+            
+            meanthrs_all.append(np.nanmean(self.totalnpy[i,:,:]*10))
+            for j in range(0,1024):
+                if j%2 == 0:
+                    meanthrs_even_one_chip.append(np.nanmean(self.totalnpy[i,:,j])*10)
+                else :
+                    meanthrs_odd_one_chip.append(np.nanmean(self.totalnpy[i,:,j])*10)
+                    
+            meanthrs_odd_all.append(np.nanmean(meanthrs_odd_one_chip))
+            meanthrs_even_all.append(np.nanmean(meanthrs_even_one_chip))
+            
+        
+        # print(self.__mydose_list)
+        # print(meanthrs_even_all)
+        if isall:
+            plt.plot(self.__mydose_list,meanthrs_all,color='green',marker='o',markersize=mymarkersize,label="All")
+        plt.plot(self.__mydose_list,meanthrs_even_all,color='red',marker='o',markersize=mymarkersize,label="Even")
+        plt.plot(self.__mydose_list,meanthrs_odd_all,color='blue',marker='o',markersize=mymarkersize,label="Odd")
+        
+        
+        meanthrs_chip = np.nanmean(meanthrs_even_all + meanthrs_odd_all)
+        
+        plt.ylim(meanthrs_chip-30,meanthrs_chip+30)
+        plt.legend()
+        
+        plt.xlabel('dose')
+        plt.ylabel('threshold')
+
+
+        plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
+        
+        
+    def OddEvenRowThrs_all(self,myhspace=0.5,mywspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+    
+        exp_path=[
+                  "processed/totalnpy/Apr_threshold_revision_total.npy",
+                  "processed/totalnpy/Jun_threshold_revision_total.npy",
+                  "processed/totalnpy/Jul_RPI_threshold_revision_total.npy",
+                  "processed/totalnpy/Jul_RAS_threshold_revision_total.npy",
+                  "processed/totalnpy/Sep_threshold_revision_total.npy",
+                  "processed/totalnpy/Nov_threshold_revision_total.npy"
+                    ]
+        
+        dose_path=[
+                  "doseinfo/Apr_dose.txt",
+                  "doseinfo/Jun_dose.txt",
+                  "doseinfo/Jul_sepe_dose.txt",
+                  "doseinfo/Jul_cont_dose.txt",
+                  "doseinfo/Sep_dose.txt",
+                  "doseinfo/Nov_dose.txt"
+                    ]
+        
+        totaExpNum = np.shape(exp_path)[0]
+        
+        
+        for i in range(0,totaExpNum):
+            self.load(exp_path[i])
+            self.loaddose(dose_path[i])
+            print("{}th exp".format(i+1))
+            ax = plt.figure(1).add_subplot(totaExpNum/2,2,i+1)
+            self.OddEvenRowThrs(isall=True)
+            self.resetdoselist()
