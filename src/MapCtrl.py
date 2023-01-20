@@ -17,6 +17,7 @@ import copy
 class MapCtrl:
     def __init__(self,):
         plt.figure(1,figsize=(7,9),facecolor='white')
+        # plt.figure(1,figsize=(7,3),facecolor='white')
     
     class PartialMap:
         OriginMap = []
@@ -30,6 +31,7 @@ class MapCtrl:
         extractLEdgeMap = []
         extractREdgeMap = []
         extractBelowMap = []
+        myslice = []
         
         resultMap = []
         
@@ -357,6 +359,17 @@ class MapCtrl:
             
             self.resultMap = copy.deepcopy(self.extractREdgeMap)
             # plt.imshow(self.resultMap)
+        
+        def ExtractSlice(self,targetrow):
+            mine = copy.deepcopy(self.OriginMap)
+            self.myslice = mine[0:512,targetrow:targetrow+1]
+            
+            
+            self.resultMap = copy.deepcopy(self.myslice)
+            # print(np.shape(self.myslice))
+            plt.plot(range(0,np.shape(self.myslice)[0]),self.myslice*10,'o',markersize=.5)
+            # plt.plot(range(0,np.shape(self.myslice)[0]),self.myslice*10)
+            # plt.ylim(80,110)
         
         ### Change values outside PCB as -1000
         def ConvertPCBOutside(self,):
@@ -825,3 +838,8 @@ class MapCtrl:
         print("Number of pixel @ Outside of Left Edge : {}".format(numLEdge))
         print("Number of pixel @ Outside of Right Edge : {}".format(numREdge))
         print("Number of pixel @ Outside of PCB Edge : {}".format(numPCB))
+        
+    def TestSlice(self,myrow):
+        for i in range(0,myrow):
+            plt.figure(1).add_subplot(int(myrow/2),2,i+1)
+            self.myPM.ExtractSlice(i*10)

@@ -80,21 +80,21 @@ if args.anta:
     
     # PCB_data    = args.path
     # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
-    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
-    # dosedata    = "doseinfo/Nov_dose.txt"
-    # mythrs.load(PCB_data)
-    # mythrs.loaddose(dosedata)
+    PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    dosedata    = "doseinfo/Nov_dose.txt"
+    mythrs.load(PCB_data)
+    mythrs.loaddose(dosedata)
     # mythrs.SetAllMonthsData()
     # mythrs.printshape()
     
-    mythrs.OddEvenRowThrs_all()
+    # mythrs.OddEvenRowThrs_all()
     # mythrs.projectionY()
     # mythrs.All0kradThrsProj("Y")
 
     
 
     # mythrs.pltshow()
-    mythrs.pltsave("All_OddEven_thrs_dose")
+    # mythrs.pltsave("All_OddEven_thrs_dose")
     # mythrs.pltsave("All_thrs_ProjY_Pad")
 
 if args.cpprun:
@@ -108,19 +108,19 @@ if args.cpprun:
 if args.mapctrl:
     mymapctrl = MapCtrl.MapCtrl()
     
-    mymapctrl.SetOutput("test.png")
+    # mymapctrl.SetOutput("test.png")
     
     # mymapctrl.loadtotalmap("processed/totalnpy/Jun_threshold_revision_total.npy")
     mymapctrl.loadtotalmap("processed/totalnpy/Nov_threshold_origin_total.npy")
     mymapctrl.loadonemap(0)
 
     
-    mymapctrl.ShowNumPixelSomeRegion()
+    mymapctrl.TestSlice(10)
     # mymapctrl.ShowExtractLEdge()
     
     
-    # mymapctrl.pltshow()
-    mymapctrl.pltsave("test")
+    mymapctrl.pltshow()
+    # mymapctrl.pltsave("test")
     
     
 
@@ -156,13 +156,13 @@ if args.subsub:
     # mysubsub.SubThrsMap_3D()
     
     # mymode = args.target
-    mysubsub.NullPackPartHisto_All()
-    # mysubsub.NullPackPartHistoForArea_All()
+    # mysubsub.NullPackPartHisto_All()
+    mysubsub.NullPackPartHistoForArea_All()
     # mysubsub.ThrsMapPackPartHisto_All()
     
     
     # myoutput = args.output
-    myoutput = "test"
+    myoutput = "Nov_NullNum_AllRegion_perc"
     # mysubsub.pltshow()
     mysubsub.pltsave(myoutput)
     
