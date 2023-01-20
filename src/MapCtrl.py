@@ -29,7 +29,7 @@ class MapCtrl:
         extractMidMap = []
         extractLEdgeMap = []
         extractREdgeMap = []
-        extractBellowMap = []
+        extractBelowMap = []
         
         resultMap = []
         
@@ -293,7 +293,7 @@ class MapCtrl:
             self.resultMap = copy.deepcopy(self.extractMidMap)
             # plt.imshow(self.extractMidMap)
             
-        def ExtractBellow(self,):
+        def ExtractBelow(self,):
             x1 = 0
             x2 = 1024
             x3 = 1024
@@ -305,10 +305,10 @@ class MapCtrl:
             y4 = 400
         
             mine = copy.deepcopy(self.OriginMap)
-            self.extractBellowMap = mine[y3:y1,x1:x2]
+            self.extractBelowMap = mine[y3:y1,x1:x2]
             
-            self.resultMap = copy.deepcopy(self.extractBellowMap)
-            # plt.imshow(self.extractBellowMap)
+            self.resultMap = copy.deepcopy(self.extractBelowMap)
+            # plt.imshow(self.extractBelowMap)
             
         def ExtractLEdge(self,):
             
@@ -798,8 +798,8 @@ class MapCtrl:
     def ShowExtractMid(self,):
         self.myPM.ExtractMid()
     
-    def ShowExtractBellow(self,):
-        self.myPM.ExtractBellow()
+    def ShowExtractBelow(self,):
+        self.myPM.ExtractBelow()
         
     def ShowExtractLEdge(self,):
         self.myPM.ExtractLEdge()

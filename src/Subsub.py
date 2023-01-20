@@ -240,8 +240,8 @@ class Subsub:
             if mode == "REdge":
                 self.mymapctrl.myPM.ExtractREdge()
                 # self.mymapctrl.myPM.ConvertREdgeOutside
-            if mode == "Bellow":
-                self.mymapctrl.myPM.ExtractBellow()
+            if mode == "Below":
+                self.mymapctrl.myPM.ExtractBelow()
             
             plt.subplots_adjust(wspace = .4)
             
@@ -303,8 +303,8 @@ class Subsub:
                 self.mymapctrl.myPM.ExtractREdge()
                 # self.mymapctrl.myPM.ConvertREdgeOutside
                 myarea = Redge_num
-            if mode == "Bellow":
-                self.mymapctrl.myPM.ExtractBellow()
+            if mode == "Below":
+                self.mymapctrl.myPM.ExtractBelow()
                 myarea = bellow_num
                 
             
@@ -362,8 +362,8 @@ class Subsub:
                 self.mymapctrl.myPM.ExtractLEdge()
             if mode == "REdge":
                 self.mymapctrl.myPM.ExtractREdge()
-            if mode == "Bellow":
-                self.mymapctrl.myPM.ExtractBellow()
+            if mode == "Below":
+                self.mymapctrl.myPM.ExtractBelow()
                 
             self.extractedmap = self.mymapctrl.myPM.resultMap
             xlength, ylength = np.shape(self.extractedmap)
@@ -404,7 +404,7 @@ class Subsub:
         self.ThrsMapPackPartHisto("Mid")
         self.ThrsMapPackPartHisto("LEdge")
         self.ThrsMapPackPartHisto("REdge")
-        self.ThrsMapPackPartHisto("Bellow")
+        self.ThrsMapPackPartHisto("Below")
         
         plt.title("Mean threshold of each region for dose")
         plt.xlabel("Dose(krad)")
@@ -465,8 +465,8 @@ class Subsub:
                 self.mymapctrl.myPM.ExtractREdge()
                 # self.mymapctrl.myPM.ConvertREdgeOutside
                 myarea = Redge_num
-            if mode == "Bellow":
-                self.mymapctrl.myPM.ExtractBellow()
+            if mode == "Below":
+                self.mymapctrl.myPM.ExtractBelow()
                 myarea = bellow_num
                 
             
@@ -493,7 +493,7 @@ class Subsub:
         self.NullPackPartHistoForArea("Mid")
         self.NullPackPartHistoForArea("LEdge")
         self.NullPackPartHistoForArea("REdge")
-        self.NullPackPartHistoForArea("Bellow")
+        self.NullPackPartHistoForArea("Below")
         
         plt.title("# of null pixel for each region per pixelss")
         # plt.yscale('log')
@@ -550,8 +550,8 @@ class Subsub:
                 self.mymapctrl.myPM.ExtractREdge()
                 # self.mymapctrl.myPM.ConvertREdgeOutside
                 myarea = Redge_num
-            if mode == "Bellow":
-                self.mymapctrl.myPM.ExtractBellow()
+            if mode == "Below":
+                self.mymapctrl.myPM.ExtractBelow()
                 myarea = bellow_num
                 
             
@@ -575,7 +575,7 @@ class Subsub:
         self.NullPackPartHisto("Mid")
         self.NullPackPartHisto("LEdge")
         self.NullPackPartHisto("REdge")
-        self.NullPackPartHisto("Bellow")
+        self.NullPackPartHisto("Below")
         
         plt.title("# of null pixel for each region")
         plt.yscale('symlog')
