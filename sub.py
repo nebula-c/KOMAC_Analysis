@@ -3,6 +3,7 @@
 import os,sys
 import argparse
 import time 
+import numpy as np
 
 # sys.path.append('/home/suchoi/CBTest/src')
 # from src import test
@@ -115,12 +116,14 @@ if args.mapctrl:
     mymapctrl.loadonemap(0)
 
     
-    mymapctrl.TestSlice(10)
+    # mymapctrl.SliceRow(10,3)
     # mymapctrl.ShowExtractLEdge()
-    
+    testrows = [50,200,280,350,550,800,1003]
+    mymapctrl.SliceRowWithMapsAll(testrows)
+    # mymapctrl.SlicesPositionMap(testrows)
     
     mymapctrl.pltshow()
-    # mymapctrl.pltsave("test")
+    # mymapctrl.pltsave("Slice7rowsMap")
     
     
 
@@ -141,28 +144,29 @@ if args.rowhit:
 
 
 if args.subsub:
+    # x = [1,2,np.nan,4,np.nan]
+    # y = [np.nan,7,8,9,np.nan]
+    # idx = np.isfinite(x) & np.isfinite(y)
+    # x=np.array(x)
+    # print(x[idx])
+    
     mysubsub    = Subsub.Subsub()
     
     NoPCB_data  = "processed/totalnpy/Jul_RPI_threshold_origin_total.npy"
     PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
     
-    mysubsub.loadthrs1(NoPCB_data)
+    # mysubsub.loadthrs1(NoPCB_data)
     mysubsub.loadthrs2(PCB_data)
-    mysubsub.SetMap1(0)
-    mysubsub.SetMap2(0)
+    # mysubsub.SetMap1(0)
+    # mysubsub.SetMap2(0)
     # mysubsub.PutNullas0()
     
-    # mysubsub.SubThrsMap()
-    # mysubsub.SubThrsMap_3D()
-    
-    # mymode = args.target
-    # mysubsub.NullPackPartHisto_All()
-    mysubsub.NullPackPartHistoForArea_All()
-    # mysubsub.ThrsMapPackPartHisto_All()
+    # mysubsub.SliceRowWithMaps()
+    mysubsub.SliceRowWithoutMaps(3,4)
     
     
     # myoutput = args.output
-    myoutput = "Nov_NullNum_AllRegion_perc"
+    myoutput = "Nov_Thrs_Slice_Map_3_4"
     # mysubsub.pltshow()
     mysubsub.pltsave(myoutput)
     

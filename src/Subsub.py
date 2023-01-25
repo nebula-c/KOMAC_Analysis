@@ -582,4 +582,39 @@ class Subsub:
         plt.xlabel("Dose(krad)")
         # plt.xticks([0,1,2,3,4])
         
+    def SliceRowWithMaps(self,numrow=1):
+        self.mymapctrl.copynpyfrom(self.mymap2)
+        
+        myrowlist = [50,200,280,350,550,800,1003]
+        totalrow = np.shape(myrowlist)[0]
+        
+        for i in range(0,totalrow):
+            plt.figure(1).add_subplot(totalrow,2,2*i+1)
+            self.mymapctrl.ShowAllRegion_onemap()
+            self.mymapctrl.myPM.ExtractSliceSome(myrowlist[i],numrow)
+            plt.figure(1).add_subplot(totalrow,2,2*i+2)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            plt.grid()
+        plt.subplots_adjust(hspace = 0.5)
+    
+    def SliceRowWithoutMaps(self,doseorder1,doseorder2,numrow=1):
+        self.mymapctrl.copynpyfrom(self.mymap2)
+        
+        myrowlist = [50,200,280,350,550,800,1003]
+        totalrow = np.shape(myrowlist)[0]
+        
+        
+        for i in range(0,totalrow):
+            plt.figure(1).add_subplot(totalrow,2,2*i+1)
+            self.SetMap2(doseorder1)
+            self.mymapctrl.copynpyfrom(self.mymap2)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            plt.grid()
+            
+            plt.figure(1).add_subplot(totalrow,2,2*i+2)
+            self.SetMap2(doseorder2)
+            self.mymapctrl.copynpyfrom(self.mymap2)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            plt.grid()
+        plt.subplots_adjust(hspace = 0.5)
         

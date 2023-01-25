@@ -360,17 +360,40 @@ class MapCtrl:
             self.resultMap = copy.deepcopy(self.extractREdgeMap)
             # plt.imshow(self.resultMap)
         
-        def ExtractSlice(self,targetrow):
+        def ExtractSliceSome(self,targetrow,numrow):
             mine = copy.deepcopy(self.OriginMap)
-            self.myslice = mine[0:512,targetrow:targetrow+1]
+            self.myslice = mine[0:512,targetrow:targetrow+numrow]
+                        
+            self.resultMap = copy.deepcopy(self.myslice)
+            resultslice = np.nanmean(self.myslice,axis=1) * 10
+
+            plt.plot([targetrow,targetrow+numrow],   [0,511],    color='yellow',linewidth=1)
+            # plt.imshow(resultslice)
             
+            # plt.plot(range(0,np.shape(self.myslice)[0]),resultslice,'o',markersize=.5)
+
+        
+        def ExtractSliceSomeFit(self,targetrow,numrow):
+            mine = copy.deepcopy(self.OriginMap)
+            self.myslice = mine[0:512,targetrow:targetrow+numrow]
             
             self.resultMap = copy.deepcopy(self.myslice)
-            # print(np.shape(self.myslice))
-            plt.plot(range(0,np.shape(self.myslice)[0]),self.myslice*10,'o',markersize=.5)
-            # plt.plot(range(0,np.shape(self.myslice)[0]),self.myslice*10)
-            # plt.ylim(80,110)
-        
+            # resultslice = np.nanmean(self.myslice,axis=1) * 10
+            resultslice = np.nanmean(self.myslice,axis=1)
+            xvals = np.array(range(0,np.shape(self.myslice)[0]))
+            resultslice = np.array(resultslice)
+            
+            idx = np.isfinite(xvals) & np.isfinite(resultslice)
+            # print(np.shape(idx))
+            
+            
+            linear_model=np.polyfit(xvals[idx],resultslice[idx],10)
+            linear_model_fn=np.poly1d(linear_model)
+            
+            plt.plot(xvals,linear_model_fn(xvals),color="green")
+            plt.plot(xvals,resultslice,'o',markersize=.5)
+            
+            
         ### Change values outside PCB as -1000
         def ConvertPCBOutside(self,):
             x1 = 145
@@ -708,7 +731,7 @@ class MapCtrl:
             self.InputSubplot(ax,self.myPM.OriginMap*10)
     
     def ShowAllRegion_onemap(self,):
-        ax = plt.figure(1,figsize=(7,9),facecolor='white')
+        # ax = plt.figure(1,figsize=(7,9),facecolor='white')
         self.myPM.SetKaptonRegion()
         self.myPM.SetPCBRegion()
         self.myPM.SetLeftRegion()
@@ -717,9 +740,10 @@ class MapCtrl:
         self.myPM.SetREdgeRegion()
         self.myPM.SetBelowRegion()
         
-        ax = plt.axes()
+        # ax = plt.axes()
         im = plt.imshow(self.myPM.OriginMap*10,interpolation='none')
-        self.SetCbar(ax,im)
+        plt.xlim(0,1023)
+        # self.SetCbar(ax,im)
         
         
             
@@ -839,7 +863,32 @@ class MapCtrl:
         print("Number of pixel @ Outside of Right Edge : {}".format(numREdge))
         print("Number of pixel @ Outside of PCB Edge : {}".format(numPCB))
         
-    def TestSlice(self,myrow):
+    def SliceRow(self,myrow,numrow):
         for i in range(0,myrow):
             plt.figure(1).add_subplot(int(myrow/2),2,i+1)
-            self.myPM.ExtractSlice(i*10)
+            self.myPM.ExtractSliceSomeFit(i*10,numrow)
+            plt.grid()
+            
+            # linear_model=np.polyfit(range(0,512),y,1)
+            # linear_model_fn=np.poly1d(linear_model)
+            # x_s=np.arange(0,7)
+            # plt.plot(x_s,linear_model_fn(x_s),color="green")
+
+    def SliceRowWithMapsAll(self,myrowlist,numrow=1):
+        totalrow = np.shape(myrowlist)[0]
+        for i in range(0,totalrow):
+            plt.figure(1).add_subplot(totalrow,2,2*i+1)
+            self.ShowAllRegion_onemap()
+            self.myPM.ExtractSliceSome(myrowlist[i],numrow)
+            plt.figure(1).add_subplot(totalrow,2,2*i+2)
+            self.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            plt.grid()
+        
+        plt.subplots_adjust(hspace = 0.5)
+        
+    def SlicesPositionMap(self,myrowlist,numrow=1):
+        totalrow = np.shape(myrowlist)[0]
+        self.ShowAllRegion_onemap()
+        for i in range(0,totalrow):
+            self.myPM.ExtractSliceSome(myrowlist[i],numrow)
+            
