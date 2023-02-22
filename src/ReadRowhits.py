@@ -53,29 +53,29 @@ def mythrscanana(args):
 
     i=0
     for row in params['row']:
-        f.write("\n==================== {}th row ====================\n".format(row))
+        # f.write("\n==================== {}th row ====================\n".format(row))
         rowhits=np.zeros((dvmax-dvmin+1,1024))
         for dv in range(dvmin,dvmax+1):
-            f.write("========= dv : {}========".format(dv))
+            # f.write("========= dv : {}========".format(dv))
             for itrg in range(params['ntrg']):
                 hits,iev,tev,j=decoder.decode_event(data,i)
                 pbar.update(j-i)
                 i=j
-                f.write("\n----- {}th trig -----\n".format(itrg))
+                # f.write("\n----- {}th trig -----\n".format(itrg))
                 for x,y in hits:
                     pixellist = []
                     if y!=row:
                         print('warning: hit from bad row: hit=(%d,%d) row=%d \n'%(x,y,row))
                     else:
-                        f.write("({},{}) ".format(x,y))
+                        # f.write("({},{}) ".format(x,y))
                         # f.write("pixel : {},{} -->  ".format(x,y))
                         # pixellist.append("1")
                         rowhits[dv-dvmin,x]+=1
                         # f.writelines(pixellist)
                         # f.write("\n")
                         
-        if row == 5 :
-            break
+        # if row == 5 :
+            # break
         ### ------------------------------------------
         ### revision
         if args.revision: 
@@ -151,7 +151,7 @@ def mythrscanana(args):
                     bad.append((index,row))
     
     f.close()
-    raise SystemExit(1)
+    # raise SystemExit(1)
     pbar.close()
     np.save('%s/threshold_origin_%s'%(args.path,outfilename.split("-")[1]),thresholds)
     np.save('%s/noise_origin_%s'%(args.path,outfilename.split("-")[1]),noise)
@@ -218,7 +218,7 @@ if __name__=="__main__":
     parser=argparse.ArgumentParser(description='The mighty threshold scanner')
     parser.add_argument('rawdata', metavar='RAWFILE',help='raw data file to be processed')
     parser.add_argument('params', metavar='JSONFILE',help='json file with scan setteing')
-    parser.add_argument('--path',help='Output plots path', default='.' )
+    parser.add_argument('--path','-p',help='Output plots path', default='.' )
     parser.add_argument('--debug-plots',action='store_true',help='show debug plots: bad fit pixels, hitmap',default=False)
     parser.add_argument('--fit',  action='store_true',help='Fast (default) or fitted method',default=False)
     parser.add_argument('--output','-o',default='thresholds.npy',help='numpy output (default: thresholds.npy)')

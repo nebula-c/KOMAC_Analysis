@@ -19,6 +19,12 @@ class Rowhits:
     
     def SetOutput(self,myoutput): self.__output = myoutput
     
+    def pltshow(self,): plt.show()
+    
+    def pltsave(self, myname): 
+        self.__output = myname
+        plt.savefig(self.__output,dpi=300)
+    
     def load(self, path):
         self.__path = path
         self.__totalrowhits = np.load(self.__path)
@@ -61,7 +67,7 @@ class Rowhits:
             
             plt.clim(0,1)
             
-        plt.savefig(self.__output,dpi=300)
+        # plt.savefig(self.__output,dpi=300)
             
     
     def valNst(self,Nth):

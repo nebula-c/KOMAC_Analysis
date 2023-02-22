@@ -582,7 +582,7 @@ class Subsub:
         plt.xlabel("Dose(krad)")
         # plt.xticks([0,1,2,3,4])
         
-    def SliceRowWithMaps(self,numrow=1):
+    def SliceRowWithMaps(self,polyorder,numrow=1):
         self.mymapctrl.copynpyfrom(self.mymap2)
         
         myrowlist = [50,200,280,350,550,800,1003]
@@ -593,11 +593,11 @@ class Subsub:
             self.mymapctrl.ShowAllRegion_onemap()
             self.mymapctrl.myPM.ExtractSliceSome(myrowlist[i],numrow)
             plt.figure(1).add_subplot(totalrow,2,2*i+2)
-            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow,polyorder)
             plt.grid()
         plt.subplots_adjust(hspace = 0.5)
     
-    def SliceRowWithoutMaps(self,doseorder1,doseorder2,numrow=1):
+    def SliceRowWithoutMaps(self,doseorder1,doseorder2,polyorder,numrow=1):
         self.mymapctrl.copynpyfrom(self.mymap2)
         
         myrowlist = [50,200,280,350,550,800,1003]
@@ -608,13 +608,206 @@ class Subsub:
             plt.figure(1).add_subplot(totalrow,2,2*i+1)
             self.SetMap2(doseorder1)
             self.mymapctrl.copynpyfrom(self.mymap2)
-            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow,polyorder)
             plt.grid()
             
             plt.figure(1).add_subplot(totalrow,2,2*i+2)
             self.SetMap2(doseorder2)
             self.mymapctrl.copynpyfrom(self.mymap2)
-            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow)
+            self.mymapctrl.myPM.ExtractSliceSomeFit(myrowlist[i],numrow,polyorder)
             plt.grid()
         plt.subplots_adjust(hspace = 0.5)
         
+        
+    def Null_SliceRow(self,myrownum,numrow=5,mybinsize=16):
+        self.mymapctrl.myPM.ExtractSliceSome(myrownum,numrow,False)
+        target = self.mymapctrl.myPM.resultMap            
+        resultarray = np.sum((np.isnan(target)),axis=1)
+        
+        return self.RebinFor1Row(resultarray,numrow,mybinsize)
+        
+    
+    def Null_SliceRowWithMaps(self,numrow=5,mybinsize=16):
+        self.mymapctrl.copynpyfrom(self.mymap2)
+        
+        myrowlist = [50,200,280,350,550,800,1003]
+        totalrow = np.shape(myrowlist)[0]
+        
+        for i in range(0,totalrow):
+            plt.figure(1).add_subplot(totalrow,2,2*i+1)
+            self.mymapctrl.ShowAllRegion_onemap()
+            self.mymapctrl.myPM.ExtractSliceSome(myrowlist[i],numrow)
+            
+            plt.figure(1).add_subplot(totalrow,2,2*i+2)
+            new_x_axis = range(0,512,mybinsize)
+            plt.plot(new_x_axis,self.Null_SliceRow(myrowlist[i],numrow,mybinsize),'o',markersize=1)
+            plt.grid()
+            plt.ylim(-1,3)
+            plt.xticks([0,127,255,383,511])
+        plt.subplots_adjust(hspace = 0.5)
+        
+    def Null_SliceRowWithMaps_all(self,numrow=4,mybinsize=16):
+        self.mymapctrl.copynpyfrom(self.mymap2)
+        
+        myrowlist = [50,200,280,350,550,800,1003]
+        totalrow = np.shape(myrowlist)[0]
+        
+        
+        for i in range(0,totalrow):
+            plt.figure(1).add_subplot(totalrow,2,2*i+1)
+            self.mymapctrl.ShowAllRegion_onemap()
+            self.mymapctrl.myPM.ExtractSliceSome(myrowlist[i],numrow)
+            
+            plt.figure(1).add_subplot(totalrow,2,2*i+2)
+            for j in range(0,np.shape(self.mythrs2.totalnpy)[0]):
+                self.SetMap2(j)
+                # self.SetMap2(2)
+                self.mymapctrl.copynpyfrom(self.mymap2)
+                new_x_axis = range(0,512,mybinsize)
+                plt.plot(new_x_axis,self.Null_SliceRow(myrowlist[i],numrow,mybinsize),'o-',markersize=1,linewidth=.5)
+                
+                plt.yticks([0,5,10])
+                plt.xticks([0,127,255,383,511])
+                plt.grid()
+                plt.ylim(-1,10)
+                # break
+        plt.subplots_adjust(hspace = 0.5)
+        
+        
+        
+    ### Rebin function for 1d array
+    def RebinFor1Row(self,inputarray,numrow,binsize):
+        arraysize = np.shape(inputarray)[0]
+        outputarray = []
+        if arraysize % binsize != 0:
+            print("Size of input array : {}".format(arraysize))
+            print("Not proper rebin size!!")
+            print("Close")
+            return 0
+        
+        bincount = 0
+        newval = 0
+        for i in range(0,arraysize):
+            newval += inputarray[i]
+            bincount+=1
+            if bincount == binsize:
+                bincount = 0
+                outputarray.append(newval/numrow)
+                # outputarray.append(newval)
+                newval = 0
+        
+        # print(outputarray)
+        return outputarray
+    
+    
+    def NullThrs(self,mode,doseorder):    
+        MeanThreshold_list = []
+        NumberOfNull_list = []
+        NumberOfNull_Area_list = []
+        
+        All_num = 1024*512
+        PCB_num = 45604
+        Kapton_num = 148005
+        left_num = 42900
+        mid_num = 42900
+        Ledge_num = 2556
+        Redge_num = 2556
+        bellow_num = 113664
+        
+        myarea = 0
+        
+        self.SetMap2(doseorder)
+        
+        self.resmap = self.mymap2
+        self.mymapctrl.copynpyfrom(self.resmap)
+        self.extractedmap = []
+        
+        
+        if mode == "All":
+            self.mymapctrl.myPM.ExtractAll()
+            myarea = All_num
+        if mode == "PCB":
+            self.mymapctrl.myPM.ExtractPCB()
+            # self.mymapctrl.myPM.ConvertPCBOutside()
+            myarea = PCB_num
+        if mode == "Kapton":
+            self.mymapctrl.myPM.ExtractKapton()
+            myarea = Kapton_num
+        if mode == "Left":
+            self.mymapctrl.myPM.ExtractLeft()
+            myarea = left_num
+        if mode == "Mid":
+            self.mymapctrl.myPM.ExtractMid()
+            myarea = mid_num
+        if mode == "LEdge":
+            self.mymapctrl.myPM.ExtractLEdge()
+            # self.mymapctrl.myPM.ConvertLEdgeOutside
+            myarea = Ledge_num
+        if mode == "REdge":
+            self.mymapctrl.myPM.ExtractREdge()
+            # self.mymapctrl.myPM.ConvertREdgeOutside
+            myarea = Redge_num
+        if mode == "Below":
+            self.mymapctrl.myPM.ExtractBelow()
+            myarea = bellow_num
+            
+            
+        self.extractedmap = self.mymapctrl.myPM.resultMap
+        xlength, ylength = np.shape(self.extractedmap)
+        
+        if mode == "PCB":
+            sumval = np.nansum(self.extractedmap)
+            meanval = sumval / (xlength * ylength - self.mymapctrl.myPM.NumberOfOutsidePCBpixel() - np.count_nonzero(np.isnan(self.extractedmap)))
+            # print((xlength * ylength - self.mymapctrl.myPM.NumberOfOutsidePCBpixel() - np.count_nonzero(np.isnan(self.extractedmap))))
+            # print("sumval : {}".format(sumval))
+            # print("pixel # : {}".format((xlength * ylength - self.mymapctrl.myPM.NumberOfOutsidePCBpixel() - np.count_nonzero(np.isnan(self.extractedmap)))))
+            # print("meanval : {}".format(meanval))
+        elif mode == "LEdge":
+            sumval = np.nansum(self.extractedmap)
+            meanval = sumval / (xlength * ylength - self.mymapctrl.myPM.NumberOfOutsideLEdgepixel() - np.count_nonzero(np.isnan(self.extractedmap)))
+            # print((xlength * ylength - self.mymapctrl.myPM.NumberOfOutsideLEdgepixel() - np.count_nonzero(np.isnan(self.extractedmap))))
+            # print(sumval)
+        elif mode == "REdge":
+            sumval = np.nansum(self.extractedmap)
+            meanval = sumval / (xlength * ylength - self.mymapctrl.myPM.NumberOfOutsideREdgepixel() - np.count_nonzero(np.isnan(self.extractedmap)))
+            # print((xlength * ylength - self.mymapctrl.myPM.NumberOfOutsideREdgepixel() - np.count_nonzero(np.isnan(self.extractedmap))))
+            # print(sumval)
+        else:
+            meanval = np.nanmean(self.extractedmap)
+        MeanThreshold_list.append(meanval)
+        
+        Total_Num_null = xlength * ylength - np.count_nonzero(~np.isnan(self.extractedmap))
+        NumberOfNull_list.append(Total_Num_null)
+        Num_Null_per_area = Total_Num_null / myarea
+        NumberOfNull_Area_list.append(Num_Null_per_area)
+
+        
+        # plt.plot(MeanThreshold_list,NumberOfNull_list,'o',label=mode)
+        plt.plot(MeanThreshold_list,NumberOfNull_Area_list,'o',label=mode)
+        
+    def NullThrs_all(self,):
+        dose_list = [0,10.12,21.66,31.06,37.04]
+        for i in range(0,np.shape(self.mythrs2.totalnpy)[0]):
+            ax = plt.figure(1).add_subplot(int(np.shape(self.mythrs2.totalnpy)[0]/2)+1,2,i+1)
+            # self.NullPackPartHisto("All")
+            self.NullThrs("PCB",i)
+            self.NullThrs("Kapton",i)
+            self.NullThrs("Left",i)
+            self.NullThrs("Mid",i)
+            self.NullThrs("LEdge",i)
+            self.NullThrs("REdge",i)
+            self.NullThrs("Below",i)
+
+            plt.title("dose : {} rad".format(dose_list[i]))
+            # plt.yscale('symlog')
+            plt.xlabel("Mean threshold")
+            plt.ylabel("Number of Null per pixels")
+            plt.legend(fontsize=7,loc="upper left")
+            plt.xticks([75,80,85,90,95,100,105])
+            if i != 0 :
+                plt.yticks([0,0.05,0.1,0.15,0.2,0.25,0.3,0.35])
+                # plt.yticks([0,10000,20000,30000])
+            #     plt.ylim(-3000,40000)
+            #     plt.yscale('symlog')
+            plt.grid()
+            plt.subplots_adjust(wspace = .4,hspace=.5)

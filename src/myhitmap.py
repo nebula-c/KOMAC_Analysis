@@ -12,10 +12,13 @@ import os
 parser=argparse.ArgumentParser(description='The mighty threshold scanner')
 parser.add_argument('rawdata', metavar='FILENAME',help='raw data file to be processed')
 parser.add_argument('--bins' ,'-b',type=int,choices=[1,2,4,8,16,32],help='bin size',default=1)
-parser.add_argument('--max' ,'-M',type=int,help='color spltcale limit')
-parser.add_argument('--path',help='Output plots path', default='.' )
+parser.add_argument('--max' ,'-M',type=int,help='color scale limit')
+parser.add_argument('--path','-p',help='Output plots path', default='.' )
 parser.add_argument('--dump-raw-hits',help='Dump hit pixel addresses for each event to file',action='store_true')
 parser.add_argument('--dump-acc-hits',help='Dump hit pixel addresses sorted by frequency to file',action='store_true')
+parser.add_argument('--save','-s',action='store_true',help='save hitmap file as npy')
+parser.add_argument('--output','-o',default='hitmap.npy',help='numpy output (default: hitmap_???.npy)')
+# parser.add_argument('--path',help='Output path', default='.' )
 args=parser.parse_args()
 
 outfilename=args.rawdata.split("/")[-1].split(".")[0]
@@ -65,16 +68,22 @@ if args.dump_acc_hits:
 plt.figure(figsize=(10,5))
 cmap = copy.copy(plt.cm.get_cmap("viridis"))
 cmap.set_under(color='white')
-im = plt.imshow(rebin(hm,(512//args.bins,1024//args.bins)),vmax=args.max, cmap=cmap, vmin=0.5)
+res = rebin(hm,(512//args.bins,1024//args.bins))
+im = plt.imshow(res,vmax=args.max, cmap=cmap, vmin=0.5)
 plt.xlabel("Column")
 plt.xticks([0,256,512,768,1023])
 plt.ylabel("Row")
 plt.yticks([0,256,511])
 plt.title(f"Hit rate: {hitrate[0]:.2e} per pixel per event")
-plt.clim(0,100)
+# plt.clim(0,100)
 divider = make_axes_locatable(plt.gca())
 cax = divider.append_axes("right", size="5%", pad=0.05)
 cbar = plt.colorbar(im,cax=cax)
 cbar.set_label("Hits")
 plt.savefig(os.path.join(args.path,outfilename+".png"))
-
+if args.save:
+    if args.output == 'hitmap.npy':
+        np.save('%s/hitmap_%s.npy'%(args.path,outfilename),res)
+    else:
+        np.save('%s/%s.npy'%(args.path,args.output),res)
+    # np.save('%s/threshold_revision_%s'%(args.path,outfilename.split("-")[1]),rev_thresholds)

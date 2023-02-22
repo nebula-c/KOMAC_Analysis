@@ -6,6 +6,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable, axes_size
 
 import sys
 import os
@@ -86,7 +87,42 @@ class Thrs:
             print(1024*512 - np.count_nonzero(~np.isnan(self.totalnpy[i]*10)))
         plt.subplots_adjust(hspace = myhspace)
         # plt.savefig(self.__output,dpi=300)
+    
+    ### print all maps of threshold npy
+    def OneMap(self,ith,myhspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        ax = plt.axes()
+        im = plt.imshow(self.totalnpy[ith]*10,interpolation='none')#,vmin=0.1)
+        plt.xlabel('row')
+        plt.ylabel('column')
+        self.SetCbar(ax,im)
+        # plt.colorbar()
+        # plt.clim(0,1)
+        plt.clim(0,200)
+        print(1024*512 - np.count_nonzero(~np.isnan(self.totalnpy[ith]*10)))
         
+    ### print all maps of threshold npy
+    def OneMap_OneNpy(self,myhspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        ax = plt.axes()
+        im = plt.imshow(self.totalnpy*10,interpolation='none')#,vmin=0.1)
+        plt.xlabel('row')
+        plt.ylabel('column')
+        self.SetCbar(ax,im)
+        # plt.colorbar()
+        # plt.clim(0,1)
+        plt.clim(0,200)
+        
+    def SetCbar(self, myax, myim):
+        aspect = 20
+        pad_fraction = 0.5
+        divider = make_axes_locatable(myax)
+        width = axes_size.AxesY(myax, aspect=1./aspect)
+        pad = axes_size.Fraction(pad_fraction, width)
+        cax = divider.append_axes("right", size=width, pad=pad)
+        plt.colorbar(myim,cax=cax)
+        # plt.clim(-30,30)
+        # plt.clim(0,30)
 
 
     ### pring all histogram of threshold npy
@@ -559,3 +595,33 @@ class Thrs:
             ax = plt.figure(1).add_subplot(totaExpNum/2,2,i+1)
             self.OddEvenRowThrs(isall=True)
             self.resetdoselist()
+            
+    def Sub_FHR_Thrs(self,myhitmappath,mythrspath,myhspace=0.5,mywspace=0.3):
+        plt.figure(1,figsize=(7,9),facecolor='white')
+        
+        hitmap_npy_path = myhitmappath
+        thrs_npy_path = mythrspath
+        
+        myhitmapnpy = np.load(hitmap_npy_path)
+        mythrsnpy = np.load(thrs_npy_path)
+        
+        bool_hitmap = np.where(myhitmapnpy>0,1,0)
+        bool_thrs = np.where(mythrsnpy>0,1,0)
+        
+        # for i in range(0,512):
+        #     for j in range(0,1024):
+        #         if bool_thrs[i,j] != 0 and bool_thrs[i,j] !=1 :
+        #             print("hello")
+        
+        nullnpy = 1 - bool_thrs
+        subnpy = bool_hitmap - nullnpy
+        # subnpy = nullnpy
+        # xornpy = np.logical_xor(bool_hitmap,nullnpy)
+        
+        ax = plt.axes()
+        im = plt.imshow(subnpy,cmap="viridis",interpolation='none')
+        # im = plt.imshow(xornpy,cmap="viridis",interpolation='none')
+        # im = plt.imshow(bool_hitmap,cmap="Reds",interpolation='none')
+        # im = plt.imshow(nullnpy,cmap="Blues",interpolation='none')
+        self.SetCbar(ax,im)
+        # plt.clim(0,10)

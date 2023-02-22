@@ -7,5 +7,6 @@ __all__ = ['AllExtract',
             'ANTA',
             'Rowhitsana',
             'MapCtrl',
-            'Subsub'
+            'Subsub',
+            'analognpyana'
             ]

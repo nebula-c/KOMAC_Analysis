@@ -35,6 +35,7 @@ parser.add_argument('--hitmap',action='store_true',help='hitmap')
 parser.add_argument('-mc','--mapctrl',action='store_true',help='Map control')
 parser.add_argument('-ro','--rowhit',action='store_true',help='rowhit')
 parser.add_argument('-ss','--subsub',action='store_true',help='Subsub')
+parser.add_argument('-aa','--analognpyana',action='store_true',help='anlognpyana')
 args=parser.parse_args()
 
 
@@ -78,25 +79,40 @@ if args.merge:
 
 if args.anta:
     mythrs = ANTA.Thrs()
+    # mypath = args.path
     
+    mypath = "/home/suchoi/sourcetest/png/Vbb0V"
     # PCB_data    = args.path
-    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"
-    PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
-    dosedata    = "doseinfo/Nov_dose.txt"
-    mythrs.load(PCB_data)
-    mythrs.loaddose(dosedata)
-    # mythrs.SetAllMonthsData()
-    # mythrs.printshape()
+    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"q
+    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    # dosedata    = "doseinfo/Nov_dose.txt"
     
-    # mythrs.OddEvenRowThrs_all()
-    # mythrs.projectionY()
-    # mythrs.All0kradThrsProj("Y")
-
+    stpath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_170804.npy"
+    mythrs.load(stpath)
     
+    ### Vbb=3V
+    # hitnpypath = "/home/suchoi/sourcetest/day3/npys/hitmap_fhrscan-20230203_171421.npy"         ### Fe55
+    # hitnpypath = "/home/suchoi/sourcetest/day3/npys/hitmap_fhrscan-20230203_172636.npy"         ### Am241;10s
+    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_154848.npy"         ### Am241;50s
+    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_155035.npy"         ### Am241;90s
+    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_155328.npy"         ### Am241;10m
+    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_160634.npy"         ### Am241;2m
+    
+    # thrsnpypath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_171056.npy"      ### Fe55
+    # thrsnpypath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_172433.npy"    ### Am241
+    
+    ### Vbb=0V
+    hitnpypath = "/home/suchoi/sourcetest/day5/npys/hitmap_fhrscan-20230209_162445.npy"     
+    thrsnpypath = "/home/suchoi/sourcetest/day5/npys/threshold_origin_20230209_162545.npy"  
+    mythrs.load(thrsnpypath)
+    
+    mythrs.OneMap_OneNpy()
+    # mythrs.Sub_FHR_Thrs(hitnpypath,thrsnpypath)
 
     # mythrs.pltshow()
-    # mythrs.pltsave("All_OddEven_thrs_dose")
-    # mythrs.pltsave("All_thrs_ProjY_Pad")
+    # myoutput = "ST_boolsub_Fe55_0V"
+    myoutput = "ThresholdMap_Fe55_0V_20230209_162545"
+    mythrs.pltsave(mypath+'/'+myoutput)
 
 if args.cpprun:
     cppfile = './dose_thrs.cpp'
@@ -129,19 +145,28 @@ if args.mapctrl:
 
 if args.rowhit:
     myrha   = Rowhitsana.Rowhits()
-# 
-# 
-    myrha.load(args.target)
-    # myrha.printshape()
-    myrha.SetOutput(args.path)
-    myrha.projectionY()
-    # myrha.reshape(1,2,True)
-    # myrha.reshape(2,3,True)
-    
-    # myrha.rh1stvalmap(1)
-    # myrha.valNst(1)
-    # myrha.val1_10st(1)
 
+    mypath = "/home/suchoi/sourcetest/totalnpys/total_rowhits_origin.npy"
+    # mypath = "/home/suchoi/sourcetest/totalnpys/total_rowhits_revision.npy"
+    # mypath = "/home/suchoi/sourcetest/totalnpys/total_threshold_origin.npy"
+    # mypath = "/home/suchoi/sourcetest/totalnpys/total_threshold_reviison.npy"
+    
+    myrha.load(mypath)
+    
+    # myrha.printshape()
+    # myrha.reshape(0,1,False)
+    # myrha.reshape(1,2,True)
+    # myrha.printshape()
+    
+    # myrha.SetOutput(args.path)
+    # myrha.projectionY()
+    
+    
+    # myrha.rh1stvalmap()
+    myrha.val1_10st(6)
+    # myrha.val1_10st(1)
+    # myrha.pltshow()
+    myrha.pltsave("Nstvalue_sourcetest")
 
 if args.subsub:
     # x = [1,2,np.nan,4,np.nan]
@@ -156,20 +181,38 @@ if args.subsub:
     PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
     
     # mysubsub.loadthrs1(NoPCB_data)
-    mysubsub.loadthrs2(PCB_data)
     # mysubsub.SetMap1(0)
-    # mysubsub.SetMap2(0)
+    mysubsub.loadthrs2(PCB_data)
+    # mysubsub.SetMap2(2)
     # mysubsub.PutNullas0()
     
-    # mysubsub.SliceRowWithMaps()
-    mysubsub.SliceRowWithoutMaps(3,4)
+    # mysubsub.SliceRowWithMaps(10)
+    # mysubsub.SliceRowWithoutMaps(3,4,5)
+    # mysubsub.Null_SliceRowWithMaps_all()
+    mysubsub.NullThrs_all()
+    
+    # testarray = [1,2,3,4,5,6,7,8,9,10,11,12]
+    # mysubsub.RebinFor1Row(testarray,4)
     
     
     # myoutput = args.output
-    myoutput = "Nov_Thrs_Slice_Map_3_4"
+    myoutput = "Nov_Thrs_Null_Area"
     # mysubsub.pltshow()
     mysubsub.pltsave(myoutput)
     
+if args.analognpyana:
+    myaa = analognpyana.Analognpyana()
+    
+    mypath1 = "/home/suchoi/day7/analog50"
+    mypath2 = "/home/suchoi/KOMAC/analysis/processed/analognpy/each/ana50"
+    # onepath = mypath2 + "/" + "analog-20230210_182543.npy"
+    
+    # myaa.make_each_analog_npy(mypath1)
+    myaa.Draw_total_analog_npy(mypath2,'.',0,50)
+    # myaa.DrawOneNpy(onepath)
+    
+    # myaa.pltshow()
+    myaa.pltsave("test")
 
 
 end = time.time()

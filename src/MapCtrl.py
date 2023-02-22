@@ -360,20 +360,16 @@ class MapCtrl:
             self.resultMap = copy.deepcopy(self.extractREdgeMap)
             # plt.imshow(self.resultMap)
         
-        def ExtractSliceSome(self,targetrow,numrow):
+        def ExtractSliceSome(self,targetrow,numrow,isshow=True):
             mine = copy.deepcopy(self.OriginMap)
             self.myslice = mine[0:512,targetrow:targetrow+numrow]
-                        
             self.resultMap = copy.deepcopy(self.myslice)
-            resultslice = np.nanmean(self.myslice,axis=1) * 10
 
-            plt.plot([targetrow,targetrow+numrow],   [0,511],    color='yellow',linewidth=1)
-            # plt.imshow(resultslice)
-            
-            # plt.plot(range(0,np.shape(self.myslice)[0]),resultslice,'o',markersize=.5)
+            if isshow == True:
+                plt.plot([targetrow,targetrow+numrow],   [0,511],    color='yellow',linewidth=1)
 
-        
-        def ExtractSliceSomeFit(self,targetrow,numrow):
+
+        def ExtractSliceSomeFit(self,targetrow,numrow,polydegree=10):
             mine = copy.deepcopy(self.OriginMap)
             self.myslice = mine[0:512,targetrow:targetrow+numrow]
             
@@ -387,7 +383,7 @@ class MapCtrl:
             # print(np.shape(idx))
             
             
-            linear_model=np.polyfit(xvals[idx],resultslice[idx],10)
+            linear_model=np.polyfit(xvals[idx],resultslice[idx],polydegree)
             linear_model_fn=np.poly1d(linear_model)
             
             plt.plot(xvals,linear_model_fn(xvals),color="green")
@@ -744,7 +740,8 @@ class MapCtrl:
         im = plt.imshow(self.myPM.OriginMap*10,interpolation='none')
         plt.xlim(0,1023)
         # self.SetCbar(ax,im)
-        
+        plt.xticks([0,255,511,767,1023])
+        plt.yticks([0,127,255,383,511])
         
             
 
