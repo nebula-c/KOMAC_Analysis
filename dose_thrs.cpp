@@ -39,6 +39,11 @@ void Plots_Prague(mymg *mine);
 void Plots_pragueNrevision(mymg *mg1, mymg *mg2);
 void Plots_TR23(mymg *mine);
 void Plots_comp3(mymg *mg1, mymg *mg2, mymg *mg3);
+void Plots_revision3(mymg *mine);
+void Plots_origin3(mymg *mine);
+void Plots_Sub_3(mymg *mine);
+TGraph* Subtract_graph(TGraph *g1, TGraph *g2,int mycolor);
+
 
 void SetGraph(TGraph *mygraph,int mycolor,int mymarkerstyle = 20,float mymarkersize = constmarkersize, float mylinewidth = constlinewidth)
 {
@@ -87,19 +92,29 @@ void dose_thrs()
     mymg *mg = new mymg();
     mymg *mg2 = new mymg();
     LoadGraph();
+    char* mytitle = "Subtract After from Before Collection";
+    
 
     // Plots_Only_Revision(mg);
     // Plots_originNrevision(mg);
-    Plots_Jul_time(mg);
+    // Plots_Jul_time(mg);
     // Plots_flux_order(mg);
     // Plots_Prague(mg);
     // Plots_pragueNrevision
     // Plots_TR23(mg);
     // Plots_comp3(mg,mg,mg);
+    // Plots_revision3(mg);
+    // Plots_origin3(mg);
+    Plots_Sub_3(mg);
+    
+
+
 
     // mg->offLegend();
     // mg->SetMG("Dose(krad)","Mean Threshold",0,100,0,200);
-    mg->SetMG("Time(min)","Mean Threshold",0,600,0,200);
+    mg->SetMG("Dose(krad)","Threshold",0,60,-5,5);
+    // mg->SetMG("Time(min)","Mean Threshold",0,600,0,200);
+    mg->SetTitle(mytitle);
     mg->Draw();
     
     c1->SetGrid();
@@ -620,3 +635,74 @@ void Plots_comp3(mymg *mg1, mymg *mg2, mymg *mg3)
 }
 
 
+void Plots_revision3(mymg *mine)
+{
+    //-------------------------------------------------------------------------
+    // **** Revision for 3 data ****/
+    //-------------------------------------------------------------------------
+    SetGraph(gApr_revision_dose_thrs,kRed);
+    SetGraph(gJun_revision_dose_thrs,kOrange);
+    SetGraph(gJul_RAS_revision_dose_thrs,kBlue);
+
+    
+    mine->Add(gApr_revision_dose_thrs,"2022-04");
+    mine->Add(gJun_revision_dose_thrs,"2022-06");
+    mine->Add(gJul_RAS_revision_dose_thrs,"2022-07");
+}
+
+void Plots_origin3(mymg *mine)
+{
+    //-------------------------------------------------------------------------
+    // **** Origin for 3 data ****
+    //-------------------------------------------------------------------------
+    SetGraph(gApr_origin_dose_thrs,kRed);
+    SetGraph(gJun_origin_dose_thrs,kOrange);
+    SetGraph(gJul_RAS_origin_dose_thrs,kBlue);
+
+    mine->Add(gApr_origin_dose_thrs,"2022-04");
+    mine->Add(gJun_origin_dose_thrs,"2022-06");
+    mine->Add(gJul_RAS_origin_dose_thrs,"2022-07");
+}
+
+/// Sub 3 data
+void Plots_Sub_3(mymg *mine)
+{
+    SetGraph(gApr_origin_dose_thrs,kRed);
+    SetGraph(gJun_origin_dose_thrs,kOrange);
+    SetGraph(gJul_RAS_origin_dose_thrs,kBlue);
+    SetGraph(gApr_revision_dose_thrs,kRed);
+    SetGraph(gJun_revision_dose_thrs,kOrange);
+    SetGraph(gJul_RAS_revision_dose_thrs,kBlue);
+    
+    TGraph *gAprSub = Subtract_graph(gApr_origin_dose_thrs,gApr_revision_dose_thrs,kRed);
+    TGraph *gJunSub = Subtract_graph(gJun_origin_dose_thrs,gJun_revision_dose_thrs,kOrange);
+    TGraph *gJulSub = Subtract_graph(gJul_RAS_origin_dose_thrs,gJul_RAS_revision_dose_thrs,kBlue);
+
+    mine->Add(gAprSub,"2022-04");
+    mine->Add(gJunSub,"2022-06");
+    mine->Add(gJulSub,"2022-07");
+
+}
+
+TGraph* Subtract_graph(TGraph *g1, TGraph *g2,int mycolor)
+{
+
+    TGraph *subG = new TGraph();
+    for(int i=0;i<=g1->GetN();i++)
+    {
+        float myx = g1->GetPointX(i);
+        float myy = g1->GetPointY(i) - g2->GetPointY(i);
+        // cout << myy << endl;
+        subG->AddPoint(myx,myy);
+    }
+    subG->SetMarkerStyle(20);
+    subG->SetMarkerSize(constmarkersize);
+    subG->SetLineWidth(constlinewidth);
+    subG->SetMarkerColor(mycolor);
+    subG->SetLineColor(mycolor);
+    subG->GetXaxis()->SetLimits(xmin,xmax);
+    subG->SetMinimum(ymin);
+    subG->SetMaximum(ymax);
+
+    return subG;
+}

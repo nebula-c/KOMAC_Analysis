@@ -1,0 +1,2 @@
+number, command
+1, ./sub.py --test

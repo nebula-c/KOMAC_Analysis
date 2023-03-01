@@ -24,7 +24,7 @@ parser.add_argument('-r','--raw',help='Set raw target list')
 parser.add_argument('-f','--firenumana',action='store_true',help='Run analysis for Firenum')
 parser.add_argument('-e','--allextract',action='store_true',help='Extract npy')
 parser.add_argument('-m','--merge',action='store_true',help='Merge numpy files')
-parser.add_argument('-p','--path',help='path')
+parser.add_argument('-p','--path',help='path',default='.')
 parser.add_argument('-a','--anta',action='store_true',help='Analyzing Numpy-files for Threshold of ALPIDE(ANTA)')
 parser.add_argument('-o','--output',help='output name')
 parser.add_argument('-v1','--value1',type=float,help='value1 for parameter')
@@ -40,7 +40,8 @@ args=parser.parse_args()
 
 
 if args.test:
-    test.Run()
+    # test.Run()
+    print("Hello, this is the test part of sub.py")
     
 
 if args.ms:
@@ -79,39 +80,35 @@ if args.merge:
 
 if args.anta:
     mythrs = ANTA.Thrs()
-    # mypath = args.path
+    mypath = args.path
     
-    mypath = "/home/suchoi/sourcetest/png/Vbb0V"
-    # PCB_data    = args.path
-    # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"q
-    # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
-    # dosedata    = "doseinfo/Nov_dose.txt"
+    # mypath = "/home/suchoi/sourcetest/png/Vbb0V"
+    # # PCB_data    = args.path
+    # # PCB_data    = "processed/totalnpy/Apr_threshold_revision_total.npy"q
+    # # PCB_data    = "processed/totalnpy/Nov_threshold_revision_total.npy"
+    # # dosedata    = "doseinfo/Nov_dose.txt"
     
-    stpath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_170804.npy"
-    mythrs.load(stpath)
+    # stpath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_170804.npy"
+    # mythrs.load(stpath)
     
     ### Vbb=3V
-    # hitnpypath = "/home/suchoi/sourcetest/day3/npys/hitmap_fhrscan-20230203_171421.npy"         ### Fe55
-    # hitnpypath = "/home/suchoi/sourcetest/day3/npys/hitmap_fhrscan-20230203_172636.npy"         ### Am241;10s
-    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_154848.npy"         ### Am241;50s
-    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_155035.npy"         ### Am241;90s
-    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_155328.npy"         ### Am241;10m
-    # hitnpypath = "/home/suchoi/sourcetest/day4/npys/hitmap_fhrscan-20230206_160634.npy"         ### Am241;2m
+    hitnpypath = "/home/suchoi/sourcetest/day3/npys/hitmap_fhrscan-20230203_171421.npy"         ### Fe55
     
-    # thrsnpypath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_171056.npy"      ### Fe55
-    # thrsnpypath = "/home/suchoi/sourcetest/day3/npys/threshold_origin_20230203_172433.npy"    ### Am241
     
-    ### Vbb=0V
-    hitnpypath = "/home/suchoi/sourcetest/day5/npys/hitmap_fhrscan-20230209_162445.npy"     
-    thrsnpypath = "/home/suchoi/sourcetest/day5/npys/threshold_origin_20230209_162545.npy"  
-    mythrs.load(thrsnpypath)
     
-    mythrs.OneMap_OneNpy()
-    # mythrs.Sub_FHR_Thrs(hitnpypath,thrsnpypath)
+    
+    # reverse_thrs_ori_path = "/home/suchoi/day8_2/thresholds.npy"
+    reverse_thrs_path = "/home/suchoi/day8/thresholds.npy"
+    # mythrs.load(reverse_thrs_ori_path)
+    # mythrs.OneMap_OneNpy()
+    
+    
+    # fullarea_hitmap = "/home/suchoi/KOMAC/analysis/processed/npys/sourcetest/fullarea/hitmap_fhrscan-20230209_194059.npy"
+    # fullarea_thrs = "/home/suchoi/KOMAC/analysis/processed/npys/sourcetest/fullarea/threshold_origin_20230209_194200.npy"
+    mythrs.Sub_FHR_Thrs(hitnpypath,reverse_thrs_path)
 
     # mythrs.pltshow()
-    # myoutput = "ST_boolsub_Fe55_0V"
-    myoutput = "ThresholdMap_Fe55_0V_20230209_162545"
+    myoutput = "ST_boolsub_Fe55_upstream"
     mythrs.pltsave(mypath+'/'+myoutput)
 
 if args.cpprun:
@@ -146,13 +143,14 @@ if args.mapctrl:
 if args.rowhit:
     myrha   = Rowhitsana.Rowhits()
 
-    mypath = "/home/suchoi/sourcetest/totalnpys/total_rowhits_origin.npy"
+    mypath = "/home/suchoi/KOMAC/analysis/processed/totalnpy/Apr_rowhits_origin_total.npy"
+    # mypath = "/home/suchoi/sourcetest/totalnpys/total_rowhits_origin.npy"
     # mypath = "/home/suchoi/sourcetest/totalnpys/total_rowhits_revision.npy"
     # mypath = "/home/suchoi/sourcetest/totalnpys/total_threshold_origin.npy"
     # mypath = "/home/suchoi/sourcetest/totalnpys/total_threshold_reviison.npy"
     
     myrha.load(mypath)
-    
+    myrha.printshape()
     # myrha.printshape()
     # myrha.reshape(0,1,False)
     # myrha.reshape(1,2,True)
@@ -163,10 +161,14 @@ if args.rowhit:
     
     
     # myrha.rh1stvalmap()
-    myrha.val1_10st(6)
-    # myrha.val1_10st(1)
-    # myrha.pltshow()
-    myrha.pltsave("Nstvalue_sourcetest")
+    # myrha.valNst(6)
+    # myrha.val1_10st(3)
+    myrha.Nst(3,0)
+    
+    mytitle = "Histogram of number of detection, when #e=0"
+    myrha.plttitle(mytitle)
+    myrha.pltshow()
+    # myrha.pltsave(mytitle)
 
 if args.subsub:
     # x = [1,2,np.nan,4,np.nan]
@@ -180,16 +182,15 @@ if args.subsub:
     NoPCB_data  = "processed/totalnpy/Jul_RPI_threshold_origin_total.npy"
     PCB_data    = "processed/totalnpy/Nov_threshold_origin_total.npy"
     
+    
     # mysubsub.loadthrs1(NoPCB_data)
     # mysubsub.SetMap1(0)
     mysubsub.loadthrs2(PCB_data)
     # mysubsub.SetMap2(2)
     # mysubsub.PutNullas0()
     
-    # mysubsub.SliceRowWithMaps(10)
-    # mysubsub.SliceRowWithoutMaps(3,4,5)
-    # mysubsub.Null_SliceRowWithMaps_all()
-    mysubsub.NullThrs_all()
+    mysubsub.DrawMap2()
+    # mysubsub.NullThrs_all()
     
     # testarray = [1,2,3,4,5,6,7,8,9,10,11,12]
     # mysubsub.RebinFor1Row(testarray,4)
@@ -197,8 +198,8 @@ if args.subsub:
     
     # myoutput = args.output
     myoutput = "Nov_Thrs_Null_Area"
-    # mysubsub.pltshow()
-    mysubsub.pltsave(myoutput)
+    mysubsub.pltshow()
+    # mysubsub.pltsave(myoutput)
     
 if args.analognpyana:
     myaa = analognpyana.Analognpyana()
@@ -215,8 +216,8 @@ if args.analognpyana:
     myaa.pltsave("test")
 
 
-end = time.time()
-print("=========================================")
-print("Total run-time : {0:00.2f} sec(sub)".format(end-start))
-print("=========================================")
-
+if __name__ == "__main__":
+    end = time.time()
+    print("=========================================")
+    print("Run-time(sub.py) : {0:00.2f} sec(sub)".format(end-start))
+    print("=========================================")

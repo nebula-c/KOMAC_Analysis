@@ -82,6 +82,24 @@ class Subsub:
     def SetMap2(self,ith):
         self.mymap2 = self.mythrs2.totalnpy[ith]
         self.mymap2 = self.mymap2 * 10
+        
+    def SetMap1_onepny(self,ith):
+        self.mymap1 = self.mythrs1.totalnpy[ith]
+        self.mymap1 = self.mymap1 * 10
+    
+    def SetMap2(self,ith):
+        self.mymap2 = self.mythrs2.totalnpy[ith]
+        self.mymap2 = self.mymap2 * 10
+    
+    def DrawMap1(self,):
+        ax = plt.axes()
+        im = plt.imshow(self.mythrs1)
+        self.SetCbar(ax,im)
+    
+    def DrawMap2(self,):
+        ax = plt.axes()
+        im = plt.imshow(self.mythrs2)
+        self.SetCbar(ax,im)
     
     def PutNullas0(self,):
         # self.mymap1[np.isnan(self.mymap1)] = 0

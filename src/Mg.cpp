@@ -21,8 +21,9 @@ class mymg
         mymg()
         {
             mg1 = new TMultiGraph();
+            l1 = new TLegend(.6,.7,.85,.85);
             // l1 = new TLegend(.2,.2,.6,.4);
-            l1 = new TLegend();
+            // l1 = new TLegend();
             // SetMG();
         }
         
@@ -50,6 +51,11 @@ class mymg
             mg1->GetYaxis()->SetTitleSize(0.04);
             mg1->GetXaxis()->SetTitleOffset(1.2);
             mg1->GetYaxis()->SetTitleOffset(1.2);
+        }
+        void SetTitle(char* mytitle)
+        {
+            // mg1->SetTitle(mytitle);
+            mg1->GetHistogram()->SetTitle(mytitle);
         }
         void Draw()
         {

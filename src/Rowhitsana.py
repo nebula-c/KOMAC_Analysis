@@ -25,6 +25,9 @@ class Rowhits:
         self.__output = myname
         plt.savefig(self.__output,dpi=300)
     
+    def plttitle(self, mytitle): 
+        plt.title(mytitle)
+    
     def load(self, path):
         self.__path = path
         self.__totalrowhits = np.load(self.__path)
@@ -62,8 +65,8 @@ class Rowhits:
         for i in range(0,np.shape(self.__totalrowhits)[0]):
             fig.add_subplot(int(np.shape(self.__totalrowhits)[0]/2)+1,2,i+1)
             myrh = self.__totalrowhits[i,0]>val
-            plt.imshow(myrh,interpolation='none',cmap = "Blues")
-            # plt.imshow(self.__totalrowhits[i,0],interpolation='none',cmap = "Blues")
+            # plt.imshow(myrh,interpolation='none',cmap = "Blues")
+            plt.imshow(self.__totalrowhits[i,0],interpolation='none',cmap = "Blues")
             
             plt.clim(0,1)
             
@@ -98,7 +101,7 @@ class Rowhits:
                     # if self.__totalrowhits[ith,x,y,0] > 0:
                     # mytext = "ith :{}, x : {}, y : {}".format(ith,x,y)
                     # print(mytext)
-                    vals.append(self.__totalrowhits[ith,Nth,x,y,])
+                    vals.append(self.__totalrowhits[ith,x,y,Nth])
             print(np.shape(vals))
             plt.hist(vals,bins=51,range=(0,50))
             plt.xticks([0,10,20,30,40,50])
@@ -117,7 +120,8 @@ class Rowhits:
                 vals= []
                 for x in range(0,512):
                     for y in range(0,1024):
-                        vals.append(self.__totalrowhits[ith,Nth,x,y,])
+                        # vals.append(self.__totalrowhits[ith,Nth,x,y,])
+                        vals.append(self.__totalrowhits[ith,x,y,Nth])
                 totalvals.append(vals)
             for Nth in range(0,MaxNth):
                 plt.hist(totalvals[Nth],bins=51,range=(0,50),histtype='step',label=Nth)
@@ -163,4 +167,33 @@ class Rowhits:
         plt.subplots_adjust(hspace = myhspace,wspace = mywspace)
         plt.savefig(self.__output,dpi=300)
         
-    
+    def Nst(self,ith,Nth):
+        fig = plt.figure(1,figsize=(7,9),facecolor='white')
+        mybins=np.arange(0,52,1)-.5
+        
+        
+        totalvals = []
+        vals= []
+        for x in range(0,512):
+            for y in range(0,1024):
+                vals.append(self.__totalrowhits[ith,x,y,Nth])
+        # totalvals.append(vals)
+        print(vals)
+        
+        plt.hist(vals,bins=mybins,edgecolor='black')
+        
+        # n,bins,patches=plt.hist(vals,bins=51,alpha=0)
+        # plt.plot(bins[:-1]+ 0.5*(bins[1:] - bins[:-1]), n, marker='o',markersize=3,linewidth=0.9)
+        # # plt.plot(bins[:-1], n, marker='o',markersize=3,linewidth=0.9)
+        # # plt.scatter(bins,n, marker='o', c='red', s=40, alpha=1)
+        # print(bins[:-1])
+        # print(bins[:-1]+ 0.5*(bins[1:] - bins[:-1]))
+        plt.xlabel("Number of electrons")
+        plt.ylabel("Number of detection(total:50)")
+        plt.xticks([0,10,20,30,40,50])
+        # plt.xlim(0,51)
+        plt.ylim(0,1000000)
+        plt.yscale('symlog')
+        plt.grid(True)
+        plt.legend(fontsize=6)
+        plt.savefig(self.__output,dpi=300)
